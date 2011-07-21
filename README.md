@@ -25,6 +25,7 @@ Code for this is found in addons/sessions
 * @mozlabs
 * https://mozillalabs.com
 * http://identity.mozilla.com
+* #identity channel in irc.mozilla.org
 
 ## Background Info
 * https://wiki.mozilla.org/Identity
