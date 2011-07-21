@@ -1,6 +1,6 @@
-#identity_sessions Firefox addon
+#sessions Firefox addon
 
-This is the identity_sessions addon.  The purpose of this addon is to allow 
+This is the sessions addon.  The purpose of this addon is to allow 
 sites that support the sessions protocol to display the status of their session 
 in the browser's URL bar.  This includes logging in, checking current status, 
 changing accounts, and logging out.
