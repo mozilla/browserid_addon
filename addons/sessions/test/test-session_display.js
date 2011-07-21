@@ -1,12 +1,12 @@
 const {Cc, Ci} = require("chrome");
-const {LoginManager} = require("login_chrome");
+const {SessionDisplay} = require("session_display");
 const {Helpers} = require("helpers");
 
 let widget;
 exports.setup = function() {
     if(!widget) {
         let doc = Helpers.chrome.getDocument();
-        widget = LoginManager({
+        widget = SessionDisplay({
             document: doc 
         });
     }

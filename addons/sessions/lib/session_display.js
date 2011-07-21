@@ -2,7 +2,7 @@ const {Cc, Ci, Cs, Cr} = require("chrome");
 const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const {EventEmitter} = require("events");
 
-const LoginManager = EventEmitter.compose({
+const SessionDisplay = EventEmitter.compose({
     constructor: function(options) {
         let {document} = options;
 
@@ -73,7 +73,7 @@ const LoginManager = EventEmitter.compose({
 
 });
 
-exports.LoginManager = LoginManager;
+exports.SessionDisplay = SessionDisplay;
 
 const NODE_SPECIAL = ['parentNode'];
 function createNode(document, nodeName, attribs) {

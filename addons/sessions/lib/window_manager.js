@@ -1,5 +1,5 @@
 const {WindowTracker} = require("window-utils");
-const {LoginManager} = require("./login_chrome");
+const {SessionDisplay} = require("./session_display");
 const {Helpers} = require("./helpers");
 const self = require("self");
 
@@ -26,18 +26,18 @@ let login, logout, sessions;
 var delegate = {
     onTrack: function(window) {
          console.log("window track");
-         let loginManager = LoginManager({
+         let sessionDisplay = SessionDisplay({
              window: window,
              document: window.document
          });
-         loginManager.none();
-         loginManager.on("login", function() {
+         sessionDisplay.none();
+         sessionDisplay.on("login", function() {
             login();   
          });
-         loginManager.on("userinfo", function() {
+         sessionDisplay.on("userinfo", function() {
              sessions();
          });
-         logins.push(loginManager);
+         logins.push(sessionDisplay);
 
          let uri = self.data.url("styles/identity-session.css");
          Helpers.chrome.loadStylesheet(uri, window.document);

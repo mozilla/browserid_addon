@@ -111,12 +111,24 @@ function onSessionTabOpen(tab) {
     tab.loginShown = false;
 };
 
+/*
+tabs.on("open", function(tab) {
+  console.log("tab open");
+  tab.expando = "my expando";
+});
+*/
 tabs.on("ready", onSessionTabReady);
-tabs.on("activate", function() {
+tabs.on("activate", function(tab) {
     console.log("tab activated");
+    console.log("typeof tab.expando: " + typeof tab.expando);
+    console.log("tab.expando: " + tab.expando);
 });
 
 function onSessionTabReady(tab) {
+    if(!tab.expando) {
+      tab.expando = "my expando";
+    }
+    console.log('typeof tab.window: ' + typeof tab.window);
     if(tab.cookie) {
         console.log("some cookies watched for this tab");
     }
