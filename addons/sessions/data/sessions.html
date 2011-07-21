@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Sessions Panel</title>
+        <style>
+            body {
+                color: #282828;
+            }
+
+            button {
+                padding: 5px 30px;
+                border: 1px solid #707070;
+                border-radius: 3px;
+                background: -moz-linear-gradient(center top, #f2f2f2 40%, #cfcfcf 100%);
+            }
+            button:hover {
+                background: -moz-linear-gradient(center top, #fafafa 40%, #cfcfcf 100%);
+            }
+
+            #wrapper {
+                background: #fff;
+                padding: 10px;
+                height: 93px;
+            }
+
+            #key {
+                width: 99px;
+                height: 85px;
+                float: left;
+                margin-right: 15px;
+            }
+
+            #userinfo {
+                font-size: .9em;
+                float: left;
+            }
+
+            h1 {
+                font-size: 1em;
+                font-weight: normal;
+                margin: 10px 0 5px 0;
+            }
+
+            #username {
+                margin: 0 0 10px 0;
+                font-weight: bold;
+                color: #383838;
+            }
+
+
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <img id="key" src="key.png" />
+            <div id="userinfo">
+                <h1>You are logged in as:</h2>
+                <div id="username"></div>
+                <button id="logout">Sign Out</button>
+            </div>
+        </div>
+    </body>
+</html>

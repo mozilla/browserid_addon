@@ -1,0 +1,39 @@
+@namespace xul url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);  
+
+#identity-sessions-box {
+    margin: 0;
+    padding: 0;
+}
+
+#identity-session-signin, #identity-session-userinfo {
+    margin: 1px 0 1px 1px;
+    padding: 0 5px;
+    border: 1px solid #555;
+    border-radius: 2px 0 0 2px;
+    border-color: #C2C2C2 #809ec7 #8b8b8b #979797;
+    background: -moz-linear-gradient(center top, #ffffff 0%, #cccccc 100%);
+    color: #555;
+    font-size: .9em;
+}
+
+#identity-session-signin:hover, #identity-session-userinfo:hover {
+    background: -moz-linear-gradient(center top, #ffffff 40%, #cccccc 100%);
+}
+
+#identity-session-userinfo {
+}
+
+#identity-session-icon {
+    display: none;
+}
+
+#identity-session-site {
+    margin: 1px 1px 1px 0;
+    padding: 0 5px;
+    background: -moz-linear-gradient(center top, #9ABEEA 0%, #4f80bb 100%);
+    border: 1px solid #3f4ed9;
+    border-color: #5d85b8 #5d85b8 #5d85b8 #cccccc;
+    border-radius: 0 2px 2px 0;
+    font-size: .9em;
+    color: #fff;
+}
