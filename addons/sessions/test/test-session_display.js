@@ -1,11 +1,9 @@
 const {Cc, Ci} = require("chrome");
 const {SessionDisplay} = require("session_display");
 const {Helpers} = require("helpers");
-const {Model} = require("model");
+const {Session} = require("session");
 
-let widget, session = new Model({
-  fields: ['email','status'] 
-});
+let widget, session = new Session();
 
 exports.setup = function() {
     if(!widget) {
