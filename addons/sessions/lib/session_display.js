@@ -1,76 +1,41 @@
+/**
+ * This is a session display, it reacts to changes in session models.
+ * It will display if session.status == 'login' or session.status == 
+ * 'loggedin'.  It will hide otherwise.
+ * @class Session
+ */
+/**
+ * Triggered whenever the sign in button is clicked.
+ * @event login
+ */
+/**
+ * Triggered whenever the userinfo button is clicked.
+ * @event userinfo 
+ */
+
 const {Cc, Ci, Cs, Cr} = require("chrome");
 const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const {EventEmitter} = require("events");
+const STATUS_SHOW = ['loggedin','login'];
 
 const SessionDisplay = EventEmitter.compose({
     constructor: function(options) {
-        let {document} = options;
-
-
-        this.box = createNode(document, "box", {
-            id: "identity-session-box"
-        });
-
-        this.signIn = createNode(document, "label", {
-            id: "identity-session-signin",
-            value: "Sign in",
-            parentNode: this.box
-        });
-        this.signIn.addEventListener("click", this._emit.bind(this, "login"), false);
-
-        this.userInfo = createNode(document, "label", {
-            id: "identity-session-userinfo",
-            value: "",
-            parentNode: this.box
-        });
-        this.userInfo.addEventListener("click", this._emit.bind(this, "userinfo"), false);
-
-        this.image = createNode(document, "image", {
-            id: "identity-session-icon",
-            parentNode: this.box
-        });
-        this.image.hide();
-
-        this.siteName = createNode(document, "label", {
-            id: "identity-session-site",
-            value: "site name",
-            parentNode: this.box
-        });
-        this.siteName.hide();
-
-        let insertBefore = document.getElementById("notification-popup-box");
-        if(insertBefore) {
-            insertBefore.parentNode.insertBefore(this.box, insertBefore);
-        }
-
+        let {document, session} = options;
+      
+        createUI.call(this, document);    
+        attachSessionEvents.call(this, session);
     },
         
-    show: function(host) {
+    show: function() {
         this.box.show();
-        this.siteName.setAttribute("value", host);
+        this._emit("show");
     },
 
-    login: function(host) {
-        this.show(host);
-        this.signIn.show();
-        this.userInfo.hide();
-    },
 
-    loggedIn: function(username, host) {
-        this.show(host);
-        this.signIn.hide();
-        this.userInfo.setAttribute("value", username);
-        this.userInfo.show();
-    },
-
-    none: function() {
+    hide: function() {
         this.box.hide();
-    },
-
-    setURL: function(url) {
-        this.siteName.setAttribute("value", url);
+        this._emit("hide");
     }
-
 });
 
 exports.SessionDisplay = SessionDisplay;
@@ -100,3 +65,45 @@ function createNode(document, nodeName, attribs) {
      return node;
 }
 
+
+function createUI(document) {
+    this.box = createNode(document, "box", {
+        id: "identity-session-box"
+    });
+
+    this.signIn = createNode(document, "label", {
+        id: "identity-session-signin",
+        value: "Sign in",
+        parentNode: this.box
+    });
+    this.signIn.addEventListener("click", this._emit.bind(this, "login"), false);
+
+    this.userInfo = createNode(document, "label", {
+        id: "identity-session-userinfo",
+        value: "",
+        parentNode: this.box
+    });
+    this.userInfo.addEventListener("click", this._emit.bind(this, "userinfo"), false);
+
+    let insertBefore = document.getElementById("notification-popup-box");
+    if(insertBefore) {
+        insertBefore.parentNode.insertBefore(this.box, insertBefore);
+    }
+}
+
+function attachSessionEvents(session) {
+    session.on("onSet:email", onSetEmail.bind(this));
+    session.on("onSet:status", onSetStatus.bind(this));
+}
+
+function onSetEmail(value) {
+    this.userInfo.setAttribute("value", value);
+}
+
+function onSetStatus(value) {
+    if(STATUS_SHOW.indexOf(value) > -1) {
+        this.show();
+    } else {
+        this.hide();
+    }
+}
