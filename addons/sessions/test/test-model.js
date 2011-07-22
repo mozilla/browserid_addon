@@ -49,5 +49,8 @@ exports['test addField'] = function(test) {
   model.addField('newField');
   let success = false;
   model.on("onSet:newField", function() success = true);
+
+  model.newField = "asdf";
+  test.assertEqual(success, true, "onSet not called for undeclared variable");
 };
 
