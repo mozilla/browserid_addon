@@ -3,15 +3,17 @@ const {EventEmitter} = require("events");
 let Model = EventEmitter.compose({
   constructor: function(options) {
     let fields = options.fields;
+    this._model = {};
     this._fields = [];
-    
+
     fields.forEach(this.addField, this);
   },
 
+  _model: undefined,
   _fields: undefined,
-  _model: {},
 
   addField: function(name) {
+      this._model[name] = undefined;
       this._fields.push(name);
       this._public.__defineSetter__(name, this._onSet.bind(this, name));
       this._public.__defineGetter__(name, this._onGet.bind(this, name));
@@ -24,12 +26,12 @@ let Model = EventEmitter.compose({
   _onSet: function(name, value) {
     this._model[name] = value;
 
-    this._emit("onSet", {
+    this._emit("set", {
       name: name,
       value: value
     });
 
-    this._emit("onSet:" + name, value);
+    this._emit("set:" + name, value);
   },
 
   _onGet: function(name) {
