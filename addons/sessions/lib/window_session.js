@@ -1,9 +1,9 @@
 
-let WindowManager = function(config) {
+let WindowSession = function(config) {
     this.session = config.session;
 };
 
-WindowManager.prototype = {
+WindowSession.prototype = {
     setSession: function(session) {
         session.getFields().forEach(function(field) {
             this.session[field] = session[field];
@@ -25,4 +25,4 @@ function onSet(info) {
 
 
 
-exports.WindowManager = WindowManager;
+exports.WindowSession = WindowSession;

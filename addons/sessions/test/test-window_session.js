@@ -1,11 +1,11 @@
-const {WindowManager} = require("window_manager");
+const {WindowSession} = require("window_manager");
 const {Session} = require("session");
 
 let wm, session;
 
 exports.setup = function() {
     session = new Session();
-    wm = new WindowManager({
+    wm = new WindowSession({
         session: session
     });
 };
