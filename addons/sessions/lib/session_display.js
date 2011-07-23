@@ -92,8 +92,8 @@ function createUI(document) {
 }
 
 function attachSessionEvents(session) {
-    session.on("onSet:email", onSetEmail.bind(this));
-    session.on("onSet:status", onSetStatus.bind(this));
+    session.on("set:email", onSetEmail.bind(this));
+    session.on("set:status", onSetStatus.bind(this));
 }
 
 function onSetEmail(value) {
