@@ -3,7 +3,6 @@ const {Panel} = require("panel");
 const {Widget} = require("widget");
 const {PageMod} = require("page-mod");
 const {Fakers} = require("./fakers");
-const LoginWidget = require("./window_manager").WindowManager;
 const tabs = require("tabs");
 const {Helpers} = require("./helpers");
 const timers = require("timers");
@@ -28,7 +27,6 @@ panel.port.on("sessions.logout", function() {
 
 Fakers();
 
-var loginWidget = LoginWidget(loginCallback, logoutCallback, sessionCallback);
 
 var currWorker;
 
