@@ -54,8 +54,8 @@ exports['test addField'] = function(test) {
   test.assertEqual(success, true, "set not called for undeclared variable");
 };
 
-exports['test getFields'] = function(test) {
-  var fields = model.getFields();
+exports['test keys'] = function(test) {
+  var fields = model.keys();
   test.assertEqual(fields.length, 2, 'we have two fields');
 };
 

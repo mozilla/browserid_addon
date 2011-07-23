@@ -5,7 +5,7 @@ let WindowSession = function(config) {
 
 WindowSession.prototype = {
     setSession: function(session) {
-        session.getFields().forEach(function(field) {
+        session.keys().forEach(function(field) {
             this.session[field] = session[field];
         }, this);
 
