@@ -1,4 +1,4 @@
-const {WindowSession} = require("window_manager");
+const {WindowSession} = require("window_session");
 const {Session} = require("session");
 
 let wm, session;

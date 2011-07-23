@@ -10,7 +10,7 @@ exports['we create it'] = function(test) {
     test.assertEqual(!!wm, true, 'we have a window manager');
 };
 
-exports['when opening a window, we get a session'] = function(test) {
+/*exports['when opening a window, we get a session'] = function(test) {
     let success = false;
 
     windows.on("open", function(window) {
@@ -21,4 +21,4 @@ exports['when opening a window, we get a session'] = function(test) {
 
     windows.open("http://www.google.com/");
     test.waitUntilDone();
-};
+};*/
