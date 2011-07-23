@@ -23,17 +23,3 @@
 #identity-session-userinfo {
 }
 
-#identity-session-icon {
-    display: none;
-}
-
-#identity-session-site {
-    margin: 1px 1px 1px 0;
-    padding: 0 5px;
-    background: -moz-linear-gradient(center top, #9ABEEA 0%, #4f80bb 100%);
-    border: 1px solid #3f4ed9;
-    border-color: #5d85b8 #5d85b8 #5d85b8 #cccccc;
-    border-radius: 0 2px 2px 0;
-    font-size: .9em;
-    color: #fff;
-}
