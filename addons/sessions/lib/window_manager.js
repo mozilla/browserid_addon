@@ -64,7 +64,6 @@ function onUntrack(window) {
 }
 
 function onWindowOpen(browserWindow) {
-    console.log("onWindowOpen");
     browserWindow.session = this.windowSession;
 }
 
