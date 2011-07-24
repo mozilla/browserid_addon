@@ -26,6 +26,8 @@ const SessionDisplay = EventEmitter.compose({
       
         createUI.call(this, document);    
         attachSessionEvents.call(this, session);
+
+        this.hide();
     },
         
     show: function() {
