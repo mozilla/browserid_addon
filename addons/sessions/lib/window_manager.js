@@ -8,11 +8,6 @@ const {Session} = require("session");
 const {SessionDisplay} = require("session_display");
 const {WindowSession} = require("window_session");
 
-// Before you mess this up again, use the low level windowTracker so that
-// you can get the document.  You need the document to create the CSS and 
-// to attach the sessionDisplay.
-
-
 let WindowManager = function() {
     let delegate = {
         onTrack: onTrack.bind(this),
@@ -20,7 +15,13 @@ let WindowManager = function() {
     };
 
     let tracker = new WindowTracker(delegate);
-
+    // Note: I believe this scheme is incorrect if multiple windows
+    // open on initial load.  This is because the WindowTracker will
+    // call onTrack on all of its windows before any calls to onWindowOpen
+    // Perhaps a better way would be to store the windowSessions on an
+    // array, and when windows.open is triggered, it will use some way
+    // to find its index into the array and get the windowSession that
+    // it needs
     windows.on("open", onWindowOpen.bind(this));
     for each(let win in windows) {
         onWindowOpen.call(this, win);
@@ -34,8 +35,8 @@ function onTrack(window) {
          let uri = self.data.url("styles/identity-session.css");
          Helpers.chrome.loadStylesheet(uri, doc);
      } catch(e) {
-          // do nothing
-       console.log('catching error');
+         // do nothing
+         console.log('catching error');
      }
 
      let session = new Session();
@@ -58,6 +59,7 @@ function onUntrack(window) {
 }
 
 function onWindowOpen(browserWindow) {
+    console.log("onWindowOpen");
     browserWindow.session = this.windowSession;
 }
 
