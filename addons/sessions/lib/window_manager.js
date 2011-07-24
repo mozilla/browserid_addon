@@ -6,6 +6,7 @@ const {Helpers} = require("./helpers");
 const self = require("self");
 const {Session} = require("session");
 const {SessionDisplay} = require("session_display");
+const {SessionPanel} = require("session_panel");
 const {WindowSession} = require("window_session");
 
 let WindowManager = function() {
@@ -44,6 +45,10 @@ function onTrack(window) {
          session: session
      });
      let sessionDisplay = new SessionDisplay({
+         document: doc,
+         session: session
+     });
+     let sessionPanel = new SessionPanel({
          document: doc,
          session: session
      });
