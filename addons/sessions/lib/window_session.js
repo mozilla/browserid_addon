@@ -1,6 +1,8 @@
+"use strict";
 
 let WindowSession = function(config) {
     this.session = config.session;
+    this.onSet = onSet.bind(this);
 };
 
 WindowSession.prototype = {
@@ -10,12 +12,11 @@ WindowSession.prototype = {
         }, this);
 
         if(this.currentSession) {
-            this.currentSession.removeListener("set", this.currentOnSet);
+            this.currentSession.removeListener("set", this.onSet);
         }
 
         this.currentSession = session;
-        this.currentOnSet = onSet.bind(this);
-        session.on("set", this.currentOnSet);
+        session.on("set", this.onSet);
     }
 };
 
