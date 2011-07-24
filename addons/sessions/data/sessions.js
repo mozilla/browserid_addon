@@ -10,8 +10,11 @@
     };
 
     function onSessionsSet(sessions) {
-        username.innerHTML = sessions[0].email;
-        self.port.emit("sessions.setheight", body.clientHeight);
+        onSessionsClear();
+        if(sessions) {
+            username.innerHTML = sessions[0].email;
+            self.port.emit("sessions.setheight", body.clientHeight);
+        }
     }
 
     var logout = document.getElementById("logout");
