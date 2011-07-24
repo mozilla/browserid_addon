@@ -11,7 +11,7 @@
 
     function onSessionsSet(sessions) {
         onSessionsClear();
-        if(sessions) {
+        if(sessions && sessions.length) {
             username.innerHTML = sessions[0].email;
             self.port.emit("sessions.setheight", body.clientHeight);
         }
