@@ -9,6 +9,8 @@ let TabManager = function() {
         createTabSession.call(this, tab);
     }
     tabs.on("open", createTabSession);
+    tabs.on("activate", setActiveTab);
+    tabs.on("ready", onTabReady);
 };
 TabManager.prototype = {
     constructor: TabManager,
@@ -36,7 +38,13 @@ function createTabSession(tab) {
     if(!tab.session) {
         tab.session = Session();
     }
-};
+}
+
+function setActiveTab(tab) {
+    
+}
+
+function onTabReady(){}
 
 exports.TabManager = TabManager;
 /*
