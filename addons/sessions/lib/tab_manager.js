@@ -16,21 +16,7 @@ TabManager.prototype = {
     constructor: TabManager,
     sessionsUpdate: function(tab, data) {
        let session = tab.session;
-       let sessions = data.sessions;
-
-       let status = "none";
-
-       if(sessions) {
-           if(sessions.length === 0) {
-               status = "login";
-           }
-           else {
-               status = "loggedin";
-           }
-       }
-
-       session.status = status;
-       return status;
+       session.sessions = data.sessions;
     }
 };
 
