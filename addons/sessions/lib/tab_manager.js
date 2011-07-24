@@ -1,6 +1,7 @@
 "use strict";
 
 const {Session} = require("session");
+const {Helpers} = require("helpers");
 const tabs = require("tabs");
 
 
@@ -15,6 +16,7 @@ let TabManager = function() {
 TabManager.prototype = {
     constructor: TabManager,
     sessionsUpdate: function(tab, data) {
+      console.log("updating sessions: " + data.sessions.length);
        let session = tab.session;
        session.sessions = data.sessions;
     }
@@ -27,7 +29,11 @@ function createTabSession(tab) {
 }
 
 function setActiveTab(tab) {
-    
+  console.log("new tab made active");
+    let windowSessions = tab.window.session;
+//    Helpers.toConsole(tab.session);
+  //  console.log("session length: " + tab.session.sessions.length);
+    windowSessions.session = tab.session;
 }
 
 function onTabReady(){}
