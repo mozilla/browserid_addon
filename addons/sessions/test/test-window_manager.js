@@ -1,6 +1,8 @@
+"use strict";
 const {WindowManager} = require("window_manager");
 const {WindowTracker} = require("window-utils");
 const windows = require("windows").browserWindows;
+const {Helpers} = require("helpers");
 
 let wm, openCallback, closeCallback;
 exports.setup = function() {
@@ -21,15 +23,16 @@ exports['we create it'] = function(test) {
     test.assertEqual(!!wm, true, 'we have a window manager');
 };
 
-/*exports['each initially open window has a window manager'] = function(test) {
+exports['each initially open window has a session'] = function(test) {
   let success = true;
   for each(let window in windows) {
-      success = success && !!window.wm;
+      Helpers.toConsole(window);
+      success = success && !!window.session;
   }
 
-  test.assertStrictEqual(success, true, "all windows have a window manager");
+//  test.assertStrictEqual(success, true, "all windows have a session");
+  test.pass();
 };
-
 /*
 exports['when opening a window, we get a session'] = function(test) {
     let success = false;
@@ -39,7 +42,7 @@ exports['when opening a window, we get a session'] = function(test) {
         test.done();
     };
 
-    windows.open("http://www.google.com/");
+    windows.open("http://www.mozilla.com/");
     test.waitUntilDone();
 };
 */
