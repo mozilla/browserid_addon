@@ -1,14 +1,17 @@
 "use strict";
 
 let WindowSession = function(config) {
-    this.session = config.session;
+    this._session = config.session;
     this.onSet = onSet.bind(this);
 };
 
 WindowSession.prototype = {
-    setSession: function(session) {
+    get session() {
+        return this._session;
+    },
+    set session(session) {
         session.keys().forEach(function(field) {
-            this.session[field] = session[field];
+            this._session[field] = session[field];
         }, this);
 
         if(this.currentSession) {
@@ -21,7 +24,7 @@ WindowSession.prototype = {
 };
 
 function onSet(info) {
-    this.session[info.name] = info.value;
+    this._session[info.name] = info.value;
 }
 
 

@@ -1,35 +1,41 @@
+"use strict";
+
 const {WindowSession} = require("window_session");
 const {Session} = require("session");
 
-let wm, session;
+let ws, session;
 
 exports.setup = function() {
     session = new Session();
-    wm = new WindowSession({
+    ws = new WindowSession({
         session: session
     });
 };
 
 exports['do we have a window manager'] = function(test) {
-    test.assertEqual(!!wm, true, 'we have a window manager');
+    test.assertEqual(!!ws, true, 'we have a window manager');
 };
 
 exports['setSession updates current session'] = function(test) {
     let newSession = new Session();
-    newSession.email = "stomlinson@mozilla.com";
+    newSession.sessions = [{
+      email: "stomlinson@mozilla.com"
+    }];
 
-    wm.setSession(newSession);
+    ws.session = newSession;
 
-    test.assertEqual(session.email, "stomlinson@mozilla.com", 'setting the session updates the original session');
+    test.assertStrictEqual(session.sessions[0].email, "stomlinson@mozilla.com", 'setting the session updates the original session');
 };
 
 exports['updating session after it is set current updates the currentSession'] = function(test) {
     let newSession = new Session();
 
-    wm.setSession(newSession);
-    newSession.email = "stomlinson@mozilla.com";
+    ws.session = newSession;
+    newSession.sessions = [{
+      email: "stomlinson@mozilla.com"
+    }];
 
-    test.assertEqual(session.email, "stomlinson@mozilla.com", 'setting the session updates the original session');
+    test.assertStrictEqual(session.sessions[0].email, "stomlinson@mozilla.com", 'setting the session updates the original session');
 };
 
 
@@ -38,9 +44,11 @@ exports['multiple sessions works alright'] = function(test) {
     let firstSession = new Session();
     let secondSession = new Session();
 
-    wm.setSession(firstSession);
-    wm.setSession(secondSession);
+    ws.session = firstSession;
+    ws.session = secondSession;
 
-    firstSession.email = "stomlinson@mozilla.com";
-    test.assertNotEqual(session.email, "stomlinson@mozilla.com", "setting data on a past session");
+    firstSession.sessions = [{
+        email: "stomlinson@mozilla.com"
+    }];
+    test.assertStrictEqual(!!ws.session.sessions, false, "setting data on a past session");
 };
