@@ -16,10 +16,12 @@ let SessionPanel = EventEmitter.compose({
 
         let session = this._session = config.session;
         session.on("set:sessions", onSessionUpdate.bind(this));
+
+        this._document = config.document;
     },
 
     show: function() {
-        var el = Helpers.chrome.getElementById("identity-session-box");
+        var el = Helpers.chrome.getElementById("identity-session-box", this._document);
         this._panel.show(el);
     },
 
