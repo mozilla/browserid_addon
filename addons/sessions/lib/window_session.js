@@ -1,26 +1,30 @@
+"use strict";
 
 let WindowSession = function(config) {
-    this.session = config.session;
+    this._session = config.session;
+    this.onSet = onSet.bind(this);
 };
 
 WindowSession.prototype = {
-    setSession: function(session) {
-        session.getFields().forEach(function(field) {
-            this.session[field] = session[field];
+    get session() {
+        return this._session;
+    },
+    set session(session) {
+        session.keys().forEach(function(field) {
+            this._session[field] = session[field];
         }, this);
 
         if(this.currentSession) {
-            this.currentSession.removeListener("set", this.currentOnSet);
+            this.currentSession.removeListener("set", this.onSet);
         }
 
         this.currentSession = session;
-        this.currentOnSet = onSet.bind(this);
-        session.on("set", this.currentOnSet);
+        session.on("set", this.onSet);
     }
 };
 
 function onSet(info) {
-    this.session[info.name] = info.value;
+    this._session[info.name] = info.value;
 }
 
 

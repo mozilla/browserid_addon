@@ -19,7 +19,7 @@ let Model = EventEmitter.compose({
       this._public.__defineGetter__(name, this._onGet.bind(this, name));
   },
 
-  getFields: function() {
+  keys: function() {
      return this._fields; 
   },
 

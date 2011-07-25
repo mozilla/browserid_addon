@@ -7,6 +7,6 @@ exports.setup = function() {
 };
 
 exports['check which fields there are'] = function(test) {
-  var fields = session.getFields();
-  test.assert(fields.length, 2, 'we have two fields');
+  var fields = session.keys();
+  test.assert(fields.length, 1, 'we have the correct number of fields');
 };
