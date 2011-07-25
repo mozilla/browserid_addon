@@ -4,14 +4,12 @@ const {WindowTracker} = require("window-utils");
 const windows = require("windows").browserWindows;
 const {Helpers} = require("helpers");
 
-let wm, openCallback;
+let wm = new WindowManager(), openCallback;
+windows.on("open", function(window) {
+    if(openCallback) openCallback(window);
+});
 exports.setup = function() {
-    wm = new WindowManager();
-
     openCallback = undefined;
-    windows.on("open", function(window) {
-        if(openCallback) openCallback(window);
-    });
 };
 
 exports['we create it'] = function(test) {
@@ -37,4 +35,15 @@ exports['when opening a window, we get a session'] = function(test) {
 
     windows.open("http://www.mozilla.com/");
     test.waitUntilDone();
+};
+
+exports["when clicking login, login event is triggered"] = function(test) {
+    let window;
+    wm.on("login", function(activeWindow) {
+        window = activeWindow;
+    });
+
+    let el = Helpers.chrome.getElementById("identity-session-signin");
+    Helpers.chrome.simulateDOMEvent(el, "MouseEvents", "click");
+    test.assertStrictEqual(!!window, true, "login was triggered, we have a window"); 
 };

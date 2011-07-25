@@ -1,5 +1,6 @@
 "use strict";
 
+const {EventEmitter} = require("events");
 const {WindowTracker} = require("window-utils");
 const windows = require("windows").browserWindows;
 const {Helpers} = require("./helpers");
@@ -9,25 +10,27 @@ const {SessionDisplay} = require("session_display");
 const {SessionPanel} = require("session_panel");
 const {WindowSession} = require("window_session");
 
-let WindowManager = function() {
-    let delegate = {
-        onTrack: onTrack.bind(this),
-        onUntrack: onUntrack.bind(this)
-    };
+let WindowManager = EventEmitter.compose({
+    constructor: function() {
+        let delegate = {
+            onTrack: onTrack.bind(this),
+            onUntrack: onUntrack.bind(this)
+        };
 
-    let tracker = new WindowTracker(delegate);
-    // Note: I believe this scheme is incorrect if multiple windows
-    // open on initial load.  This is because the WindowTracker will
-    // call onTrack on all of its windows before any calls to onWindowOpen
-    // Perhaps a better way would be to store the windowSessions on an
-    // array, and when windows.open is triggered, it will use some way
-    // to find its index into the array and get the windowSession that
-    // it needs
-    windows.on("open", onWindowOpen.bind(this));
-    for each(let win in windows) {
-        onWindowOpen.call(this, win);
+        let tracker = new WindowTracker(delegate);
+        // Note: I believe this scheme is incorrect if multiple windows
+        // open on initial load.  This is because the WindowTracker will
+        // call onTrack on all of its windows before any calls to onWindowOpen
+        // Perhaps a better way would be to store the windowSessions on an
+        // array, and when windows.open is triggered, it will use some way
+        // to find its index into the array and get the windowSession that
+        // it needs
+        windows.on("open", onWindowOpen.bind(this));
+        for each(let win in windows) {
+            onWindowOpen.call(this, win);
+        }
     }
-};
+});
 
 function onTrack(window) {
      console.log("onWindowTrack");
@@ -53,6 +56,10 @@ function onTrack(window) {
          session: session
      });
 
+     sessionDisplay.on("login", onLogin.bind(this, window));
+     sessionDisplay.on("userinfo", sessionPanel.show.bind(sessionPanel));
+     sessionPanel.on("sessionlogout", onLogout.bind(this, window));
+
      // Save this off to use in onWindowOpen since the window
      // here is a low level window and everywhere else we
      // get a BrowserWindow.  in onWindowOpen, we get a
@@ -67,6 +74,14 @@ function onWindowOpen(browserWindow) {
     browserWindow.session = this.windowSession;
 }
 
+function onLogin(window) {
+    this._emit("login", window);
+};
+
+function onLogout(window) {
+    console.log("logout now");
+    this._emit("logout", window);
+};
 
 exports.WindowManager = WindowManager;
 
