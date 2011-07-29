@@ -21,7 +21,7 @@ TabManager.prototype = {
         this._resetSession = false;
     },
     sessionReset: function(tab) {
-        console.log("session reset");
+        // console.log("session reset");
         this._resetSession = true;
     }
 };
@@ -34,14 +34,16 @@ function createTabSession(tab) {
 }
 
 function setActiveTab(tab) {
-  console.log("new tab made active");
+  //console.log("new tab made active");
     let windowSessions = tab.window.session;
-    windowSessions.session = tab.session;
+    if (windowSessions) {
+        windowSessions.session = tab.session;
+    }
 }
 
 function onTabReady(tab){
   if(this._resetSession) {
-      console.log("resetting sessions");
+    //  console.log("resetting sessions");
       tab.session.sessions = undefined;
   }
 }

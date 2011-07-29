@@ -118,10 +118,14 @@ function createNode(document, nodeName, attribs) {
 
      node.show = function() {
         node.collapsed = node.hidden = false;
+        node.setAttribute('collapsed', false);
+        node.setAttribute('hidden', false);
      };
 
      node.hide = function() {
         node.collapsed = node.hidden = true;
+        node.setAttribute('collapsed', true);
+        node.setAttribute('hidden', true);
      };
 
      for(let attrib in attribs) {
