@@ -71,7 +71,13 @@ function onUntrack(window) {
 }
 
 function onWindowOpen(browserWindow) {
-    browserWindow.session = this.windowSession;
+    let windowSession = this.windowSession;
+    browserWindow.__defineGetter__('session', function() {
+        return windowSession.session;
+    });
+    browserWindow.__defineSetter__('session', function(session) {
+        windowSession.session = session; 
+    });
 }
 
 function onLogin(window) {
@@ -79,7 +85,7 @@ function onLogin(window) {
 };
 
 function onLogout(window) {
-    console.log("logout now");
+    //console.log("logout now");
     this._emit("logout", window);
 };
 

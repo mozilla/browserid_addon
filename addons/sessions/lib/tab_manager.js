@@ -16,33 +16,34 @@ let TabManager = function() {
 TabManager.prototype = {
     constructor: TabManager,
     sessionsUpdate: function(tab, data) {
-       let session = tab.session;
-       session.sessions = data.sessions;
-        this._resetSession = false;
+       tab.sessions = data.sessions;
+       this._resetSession = false;
     },
     sessionReset: function(tab) {
-        console.log("session reset");
+     //   console.log("session reset");
         this._resetSession = true;
     }
 };
 
 function createTabSession(tab) {
     if(!tab.session) {
-        tab.session = Session();
+        let model = Session();
+        tab.__defineGetter__('session', function() { return model; });
+        tab.__defineGetter__('sessions', function() { return model.sessions; });
+        tab.__defineSetter__('sessions', function(sessions) { model.sessions = sessions; });
         setActiveTab(tab);
     }
 }
 
 function setActiveTab(tab) {
-  console.log("new tab made active");
-    let windowSessions = tab.window.session;
-    windowSessions.session = tab.session;
+    //console.log("new tab made active");
+    tab.window.session = tab.session;
 }
 
 function onTabReady(tab){
   if(this._resetSession) {
-      console.log("resetting sessions");
-      tab.session.sessions = undefined;
+      //console.log("resetting sessions");
+      tab.sessions = undefined;
   }
 }
 
