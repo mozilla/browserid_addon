@@ -7,11 +7,16 @@ const {Helpers} = require("./helpers");
 const {WindowManager} = require("window_manager");
 const {TabManager} = require("tab_manager");
 const tabs = require("tabs");
+const {Permissions} = require("permissions");
+const timers = require("timers");
+
+let pm = new Permissions();
+
 Fakers();
 
 let windowManager = new WindowManager();
-windowManager.on("login", onLogin);
-windowManager.on("logout", onLogout);
+windowManager.on("login", emitEvent.bind(null, "emitevent.login"));
+windowManager.on("logout", emitEvent.bind(null, "emitevent.logout"));
 let tabManager = new TabManager();
 
 let currWorker;
@@ -42,25 +47,14 @@ function onSessionTabOpen() {
 
 
 
-
-function onLogin() {
-    console.log("received login here");
+function emitEvent(eventName) {
     let tab = tabs.activeTab;
     if(tab) {
-        tab.worker.port.emit("emitevent.login");
+        pm.allow("popup");
+        tab.worker.port.emit(eventName);
+        timers.setTimeout(function() {
+            pm.reset("popup", tab);
+        }, 500);
     }
 };
-
-function onLogout() {
-    let tab = tabs.activeTab;
-    if(tab) {
-        tab.worker.port.emit("emitevent.logout");
-    }
-};
-
-function onSession() {
-
-};
-
-
 
