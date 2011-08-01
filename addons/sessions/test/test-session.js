@@ -1,9 +1,15 @@
 const {Session} = require("session");
+const {CookieMonster} = require("cookie_monster");
 
-let session;
+let session, cookieManager;
 
 exports.setup = function() {
-    session = new Session();
+    cookieManager = new CookieMonster;
+
+    session = new Session({
+      host: "http://www.mozilla.com",
+      cookieManager: cookieManager 
+    });
 };
 
 exports["check which fields there are"] = function(test) {
@@ -53,5 +59,46 @@ exports["getActive with multiple emails, one active"] = function(test) {
 
 };
 
+exports["noInfo with no cookies set, resets sessions"] = function(test) {
+  session.sessions = [{
+    email: "labs@mozilla.com"
+  }];
+  session.noInfo();
+
+  test.assertEqual(session.sessions, undefined, "noInfo with no cookies set resets all sessions");
+};
 
 
+exports["noInfo with cookie set, keeps current session"] = function(test) {
+  session.sessions = [{
+    email: "labs@mozilla.com",
+    bound_to: {
+      type: "cookie",
+      name: "SID"
+    }
+  }];
+  session.noInfo();
+
+  let active = session.getActive();
+  let email = active && active.email;
+  test.assertEqual(email, "labs@mozilla.com", "noInfo with cookies set keeps previous email.");
+
+};
+
+
+exports["changing a cookie then calling noInfo resets sessions"] = function(test) {
+  session.sessions = [{
+    email: "labs@mozilla.com",
+    bound_to: {
+      type: "cookie",
+      name: "SID"
+    }
+  }];
+
+  cookieManager.simulate("http://www.mozilla.com", "SID", "newValue");
+
+  session.noInfo();
+
+  let active = session.getActive();
+  test.assertUndefined(active, "noInfo with after cookies are cleared clears sessions");
+};
