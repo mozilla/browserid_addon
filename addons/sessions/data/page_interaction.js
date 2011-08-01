@@ -28,7 +28,9 @@
     }
 
     if(unsafeWindow.top === unsafeWindow.self) {
-        self.port.emit("sessions.opentab");
+        self.port.emit("sessions.opentab", {
+          host: unsafeWindow.document.location.host 
+        });
     }
 }());
 

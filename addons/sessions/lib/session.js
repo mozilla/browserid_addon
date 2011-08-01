@@ -1,4 +1,5 @@
 let {Model} = require("model");
+let {Helpers} = require("helpers");
 
 let Session = function(config) {
     let session = new Model({
@@ -6,21 +7,19 @@ let Session = function(config) {
     });
 
     session.getActive = getActive;
-    session.noInfo = noInfo;
-    // Have to bind it to the session - it is used as a callback
-    session.onCookieChange = onCookieChange.bind(session);
-    session.bound = false;
-    session.addBinding = addBinding;
-    session.removeBinding = removeBinding;
 
     if(config) {
+      session.noInfo = noInfo;
+      // Have to bind it to the session - it is used as a callback
+      session.onCookieChange = onCookieChange.bind(session);
+      session.addBinding = addBinding;
+      session.removeBinding = removeBinding;
       session.host = config.host;
       session.cookieManager = config.cookieManager;
+      session.on("beforeset:host", onBeforeSetHost.bind(session));
+      session.on("beforeset:sessions", onBeforeSetSessions.bind(session));
+      session.on("set:sessions", onSetSessions.bind(session));
     }
-
-    session.on("beforeset:host", onBeforeSetHost.bind(session));
-    session.on("beforeset:sessions", onBeforeSetSessions.bind(session));
-    session.on("set:sessions", onSetSessions.bind(session));
 
 
     return session;

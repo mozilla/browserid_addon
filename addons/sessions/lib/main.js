@@ -41,8 +41,8 @@ function onSessionSet(data) {
 }
 
 
-function onSessionTabOpen() {
-    tabManager.sessionReset(this.tab);
+function onSessionTabOpen(data) {
+    tabManager.sessionReset(this.tab, data);
 };
 
 
