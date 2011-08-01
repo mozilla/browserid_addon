@@ -23,9 +23,11 @@ const STATUS_SHOW = ['loggedin','login'];
 const SessionDisplay = EventEmitter.compose({
     constructor: function(options) {
         let {document, session} = options;
+        this.session = session;
       
         createUI.call(this, document);    
-        attachSessionEvents.call(this, session);
+        attachSessionEvents.call(this);
+
 
         this.hide();
     },
@@ -69,14 +71,14 @@ function createUI(document) {
     }
 }
 
-function attachSessionEvents(session) {
-    session.on("set:sessions", onSetSessions.bind(this));
+function attachSessionEvents() {
+    this.session.on("set:sessions", onSetSessions.bind(this));
 }
 
 function onSetSessions(sessions) {
     var status = "none";
     if(sessions) {
-        let email = getActiveEmail(sessions);
+        let email = getActiveEmail.call(this);
 
         status = "login";
         if(email) {
@@ -88,8 +90,9 @@ function onSetSessions(sessions) {
     setStatus.call(this, status);
 }
 
-function getActiveEmail(sessions) {
-    let email = sessions[0] && sessions[0].email;
+function getActiveEmail() {
+    let active = this.session.getActive(),
+        email = active && active.email;
     return email;
 }
 
