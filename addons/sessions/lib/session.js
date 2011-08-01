@@ -14,7 +14,7 @@ let Session = function(config) {
       session.cookieManager = config.cookieManager;
     }
 
-    session.on("set:host", onSetHost.bind(session));
+    session.on("beforeset:host", onBeforeSetHost.bind(session));
     session.on("beforeset:sessions", onBeforeSetSessions.bind(session));
     session.on("set:sessions", onSetSessions.bind(session));
 
@@ -68,8 +68,10 @@ function onSetSessions(sessions) {
   }
 }
 
-function onSetHost(host) {
-  // what do we do?
+function onBeforeSetHost(host) {
+  if(host !== this.host) {
+    this.sessions = undefined;
+  }
 }
 
 function onCookieChange() {

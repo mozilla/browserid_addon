@@ -7,7 +7,7 @@ exports.setup = function() {
     cookieManager = new CookieMonster;
 
     session = new Session({
-      host: "http://www.mozilla.com",
+      host: "www.mozilla.com",
       cookieManager: cookieManager 
     });
 };
@@ -95,7 +95,7 @@ exports["changing a cookie then calling noInfo resets sessions"] = function(test
     }
   }];
 
-  cookieManager.simulate("http://www.mozilla.com", "SID", "newValue");
+  cookieManager.simulate("www.mozilla.com", "SID", "newValue");
 
   session.noInfo();
 
@@ -120,11 +120,27 @@ exports["changing the sessions causes old bindings to be forgotten"] = function(
     }
   }];
 
-  cookieManager.simulate("http://www.mozilla.com", "SID", "newValue");
+  cookieManager.simulate("www.mozilla.com", "SID", "newValue");
 
   session.noInfo();
 
   let active = session.getActive();
   test.assertEqual(active.email, "labs@mozilla.com", "active email not reset when original cookie erased");
-
 };
+
+exports["Changing the host clears the sessions"] = function(test) {
+  session.sessions = [{
+    email: "labs@mozilla.com",
+    bound_to: {
+      type: "cookie",
+      name: "SID"
+    }
+  }];
+
+  session.host = "labs.mozilla.com";
+
+  let active = session.getActive();
+  test.assertUndefined(active, "setting the host clears the active sessions");
+};
+
+
