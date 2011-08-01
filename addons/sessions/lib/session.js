@@ -7,7 +7,11 @@ let Session = function(config) {
 
     session.getActive = getActive;
     session.noInfo = noInfo;
+    // Have to bind it to the session - it is used as a callback
+    session.onCookieChange = onCookieChange.bind(session);
     session.bound = false;
+    session.addBinding = addBinding;
+    session.removeBinding = removeBinding;
 
     if(config) {
       session.host = config.host;
@@ -18,7 +22,6 @@ let Session = function(config) {
     session.on("beforeset:sessions", onBeforeSetSessions.bind(session));
     session.on("set:sessions", onSetSessions.bind(session));
 
-    session.onCookieChange = onCookieChange.bind(session);
 
     return session;
 };
@@ -49,14 +52,14 @@ function noInfo() {
 }
 
 function onBeforeSetSessions(sessions) {
-  removeBinding.call(this);
+  this.removeBinding();
 }
 
 function onSetSessions(sessions) {
   let active = this.getActive();
   let binding = active && active.bound_to;
 
-  addBinding.call(this, binding);
+  this.addBinding(binding);
 }
 
 function onBeforeSetHost(host) {
@@ -66,7 +69,7 @@ function onBeforeSetHost(host) {
 }
 
 function onCookieChange() {
-  removeBinding.call(this);
+  this.removeBinding();
 }
 
 function addBinding(binding) {
