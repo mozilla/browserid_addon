@@ -9,11 +9,18 @@
 
     <ul>
       <li><a href="/">Main</a></li>
-      <li><a href="set_cookie.html">Set the cookie</a></li>
+      <li><a href="set_login.html">Set the login info, no cookie</a></li>
+      <li><a href="set_cookie.html">Set the login info, with cookie</a></li>
+      <li><a href="logout.html">Logout, clear cookies</a></li>
     </ul>
 
     <%- body %>
 
+    <script type="text/javascript">
+      document.addEventListener("logout", function() {
+        document.location.href = "/logout.html";
+      }, false);
+    </script>
   </body>
 </html>
 
