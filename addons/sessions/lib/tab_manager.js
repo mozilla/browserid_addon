@@ -49,17 +49,3 @@ function onTabReady(tab){
 }
 
 exports.TabManager = TabManager;
-/*
-    let host = data.host;
-        var username = "";
-        sessions.forEach(function(session) {
-            var boundTo = session.bound_to;
-            if(boundTo && boundTo.type === "cookie") {
-                console.log("bound to a cookie: " + boundTo.name);
-                tab.cookie = boundTo.name;
-                cookieMonster.watch(host, boundTo.name, function() {
-                    //console.log("cookie changed, we should do something");
-                });
-            }
-        });
-*/
