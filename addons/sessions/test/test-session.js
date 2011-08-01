@@ -14,7 +14,7 @@ exports.setup = function() {
 
 exports["check which fields there are"] = function(test) {
   let fields = session.keys();
-  test.assert(fields.length, 1, "we have the correct number of fields");
+  test.assertEqual(fields.length, 2, "we have the correct number of fields");
 };
 
 exports["getActive with no active email"] = function(test) {
@@ -101,4 +101,30 @@ exports["changing a cookie then calling noInfo resets sessions"] = function(test
 
   let active = session.getActive();
   test.assertUndefined(active, "noInfo with after cookies are cleared clears sessions");
+};
+
+exports["changing the sessions causes old bindings to be forgotten"] = function(test) {
+  session.sessions = [{
+    email: "labs@mozilla.com",
+    bound_to: {
+      type: "cookie",
+      name: "SID"
+    }
+  }];
+
+  session.sessions = [{
+    email: "labs@mozilla.com",
+    bound_to: {
+      type: "cookie",
+      name: "SSID"
+    }
+  }];
+
+  cookieManager.simulate("http://www.mozilla.com", "SID", "newValue");
+
+  session.noInfo();
+
+  let active = session.getActive();
+  test.assertEqual(active.email, "labs@mozilla.com", "active email not reset when original cookie erased");
+
 };
