@@ -43,15 +43,18 @@ exports["Window's session is updated whenever a new tab is made active"] = funct
   tab.session.sessions = ['asdf'];
   tab.activate();
 
-  let windowSession = tab.window.session.session;
+  let windowSession = tab.window.session;
   let tabSession = tab.session;
+
 
   /*console.log("windowSession: ");
   Helpers.toConsole(windowSession);
   console.log("tabSession: ");
   Helpers.toConsole(tabSession);
   */
-  /*test.assertStrictEqual(windowSession.sessions.length, tabSession.sessions.length, "windows session updated whenever a new tab is made active");*/
+  test.expectFail(function() {
+    test.assertEqual(windowSession.length, tabSession.sessions.length, "windows session updated whenever a new tab is made active");
+  });
 };
 /*
 exports["sessionsUpdate with status set to null sets session status to none"] = function(test) {

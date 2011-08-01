@@ -2,10 +2,14 @@
 
 const {SessionPanel} = require("session_panel");
 const {Session} = require("session");
+const {CookieMonster} = require("cookie_monster");
 
 let session, sp;
 exports.setup = function() {
-    session = new Session();
+    session = new Session({
+      cookieManager: new CookieMonster(),
+      host: "www.mozilla.com"
+    });
     sp = new SessionPanel({
       session: session
     });

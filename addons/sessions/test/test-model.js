@@ -12,26 +12,39 @@ exports['we have an item'] = function(test) {
   test.assertEqual(true, !!model, 'model created');
 };
 
-exports['set called for fields declared in constructor'] = function(test) {
+exports['beforeset, set called for fields declared in constructor'] = function(test) {
   let name, value;
+  model.on("beforeset", function(info) {
+    name = info.name;
+    value = info.value;
+  });
+  model.first = "Mozilla";
+  test.assertEqual(name, "first", "first passed as name");
+  test.assertEqual(value, "Mozilla", "Mozilla passed as name");
+
   model.on("set", function(info) {
     name = info.name;
     value = info.value;
   });
 
-  model.first = "Mozilla";
-  test.assertEqual(model.first, "Mozilla", "we set mozilla");
+  model.first = "Firefox";
+  test.assertEqual(model.first, "Firefox", "we set Firefox");
   test.assertEqual(name, "first", "first passed as name");
-  test.assertEqual(value, "Mozilla", "Mozilla passed as name");
+  test.assertEqual(value, "Firefox", "Firefox passed as name");
 };
 
-exports['set:<name> called for fields declared in constructor'] = function(test) {
-  let value = false;
+exports['beforeset:<name>, set:<name> called for fields declared in constructor'] = function(test) {
+  let beforesetValue = false,
+      value = false;
+  model.on("beforeset:first", function(info) {
+    beforesetValue = info;
+  });
   model.on("set:first", function(info) {
     value = info;
   });
 
   model.first = "Mozilla";
+  test.assertEqual(beforesetValue, "Mozilla", "beforeset:first called with right value");
   test.assertEqual(value, "Mozilla", "set:first called with right value");
 };
 

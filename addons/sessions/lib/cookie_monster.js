@@ -12,7 +12,7 @@ CookieMonster.prototype = {
         handlers.push(callback);
     },
 
-    unregisterListener: function(host, name, callback) {
+    unwatch: function(host, name, callback) {
         var handlers = this.getHandlers(host, name);
         if(handlers) {
             handlers.forEach(function(handler, index) {

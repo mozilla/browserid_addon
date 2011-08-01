@@ -2,8 +2,12 @@ const {Cc, Ci} = require("chrome");
 const {SessionDisplay} = require("session_display");
 const {Helpers} = require("helpers");
 const {Session} = require("session");
+const {CookieMonster} = require("cookie_monster");
 
-let widget, session = new Session();
+let widget, session = new Session({
+  host: "www.mozilla.com",
+  cookieManager: new CookieMonster()
+});
 
 exports.setup = function() {
     if(!widget) {

@@ -17,7 +17,7 @@ Permissions.prototype = {
         if (uri) {
             savePermission.call(this, name);
             if (!this.allowed(name)) {
-                console.log("allowing: " + name);
+                //console.log("allowing: " + name);
                 perms.add(uri, name, perms.ALLOW_ACTION);
             }
         }

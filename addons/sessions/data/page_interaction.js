@@ -20,7 +20,7 @@
     self.port.on("emitevent.logout", emitEvent.bind(undefined, "logout"));
 
     function emitEvent(name) {
-        console.log('emitting event: ' + name);
+        //console.log('emitting event: ' + name);
         var doc = unsafeWindow.document;
         var evt = doc.createEvent("UIEvents");
         evt.initUIEvent(name, false, false, unsafeWindow, 1);

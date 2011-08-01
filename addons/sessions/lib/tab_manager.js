@@ -20,7 +20,7 @@ TabManager.prototype = {
        this._resetSession = false;
     },
     sessionReset: function(tab) {
-     //   console.log("session reset");
+        // console.log("session reset");
         this._resetSession = true;
     }
 };
@@ -42,23 +42,8 @@ function setActiveTab(tab) {
 
 function onTabReady(tab){
   if(this._resetSession) {
-      //console.log("resetting sessions");
-      tab.sessions = undefined;
+      tab.session.noInfo();
   }
 }
 
 exports.TabManager = TabManager;
-/*
-    let host = data.host;
-        var username = "";
-        sessions.forEach(function(session) {
-            var boundTo = session.bound_to;
-            if(boundTo && boundTo.type === "cookie") {
-                console.log("bound to a cookie: " + boundTo.name);
-                tab.cookie = boundTo.name;
-                cookieMonster.watch(host, boundTo.name, function() {
-                    //console.log("cookie changed, we should do something");
-                });
-            }
-        });
-*/

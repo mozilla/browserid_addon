@@ -9,9 +9,12 @@ const {Session} = require("session");
 const {SessionDisplay} = require("session_display");
 const {SessionPanel} = require("session_panel");
 const {WindowSession} = require("window_session");
+const {CookieMonster} = require("cookie_monster");
 
 let WindowManager = EventEmitter.compose({
     constructor: function() {
+        this.cookieManager = new CookieMonster();
+
         let delegate = {
             onTrack: onTrack.bind(this),
             onUntrack: onUntrack.bind(this)
@@ -33,17 +36,20 @@ let WindowManager = EventEmitter.compose({
 });
 
 function onTrack(window) {
-     console.log("onWindowTrack");
+     //console.log("onWindowTrack");
      let doc = window.document;
      try {
          let uri = self.data.url("styles/identity-session.css");
          Helpers.chrome.loadStylesheet(uri, doc);
      } catch(e) {
          // do nothing
-         console.log('catching error');
+       //  console.log('catching error');
      }
 
-     let session = new Session();
+     let session = new Session({
+        cookieManager: this.cookieManager, 
+        host: doc.location.host
+     });
      let windowSession = new WindowSession({
          session: session
      });
