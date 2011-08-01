@@ -28,7 +28,7 @@ TabManager.prototype = {
 
 function createTabSession(tab) {
     if(!tab.session) {
-        tab.session = Session();
+        tab.session = new Session();
         setActiveTab(tab);
     }
 }
@@ -44,7 +44,7 @@ function setActiveTab(tab) {
 function onTabReady(tab){
   if(this._resetSession) {
     //  console.log("resetting sessions");
-      tab.session.sessions = undefined;
+      tab.session.noInfo();
   }
 }
 
