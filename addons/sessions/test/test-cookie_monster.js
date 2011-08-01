@@ -22,14 +22,14 @@ exports["can watch"] = function(test) {
     test.waitUntilDone();
 };
 
-exports["can unregister"] = function(test) {
+exports["can unwatch"] = function(test) {
     var success = true;
     var callback = function() {
         success = false;
     };
 
     monster.watch("mozilla", "test-cookie", callback);
-    monster.unregisterListener("mozilla", "test-cookie", callback);
+    monster.unwatch("mozilla", "test-cookie", callback);
     monster.simulate("mozilla", "test-cookie", "test-value");
 
     test.assertEqual(true, success, "unregister failure, callback should not have been called");
