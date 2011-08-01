@@ -1,7 +1,7 @@
 /**
  * This is a session display, it reacts to changes in session models.
- * It will display if session.status == 'login' or session.status == 
- * 'loggedin'.  It will hide otherwise.
+ * It will display if session.status == "login" or session.status == 
+ * "loggedin".  It will hide otherwise.
  * @class Session
  */
 /**
@@ -18,7 +18,7 @@
 const {Cc, Ci, Cs, Cr} = require("chrome");
 const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const {EventEmitter} = require("events");
-const STATUS_SHOW = ['loggedin','login'];
+const STATUS_SHOW = ["loggedin","login"];
 
 const SessionDisplay = EventEmitter.compose({
     constructor: function(options) {
@@ -115,20 +115,16 @@ function setStatus(status) {
 }
 
 
-const NODE_SPECIAL = ['parentNode'];
+const NODE_SPECIAL = ["parentNode"];
 function createNode(document, nodeName, attribs) {
      let node = document.createElementNS(XUL_NS, nodeName);
 
      node.show = function() {
         node.collapsed = node.hidden = false;
-        node.setAttribute('collapsed', false);
-        node.setAttribute('hidden', false);
      };
 
      node.hide = function() {
         node.collapsed = node.hidden = true;
-        node.setAttribute('collapsed', true);
-        node.setAttribute('hidden', true);
      };
 
      for(let attrib in attribs) {
@@ -136,7 +132,7 @@ function createNode(document, nodeName, attribs) {
          if(NODE_SPECIAL.indexOf(attrib) === -1) {
             node.setAttribute(attrib, val);
          }
-         else if(attrib === 'parentNode') {
+         else if(attrib === "parentNode") {
              val.insertBefore(node, null);
          }
      }
