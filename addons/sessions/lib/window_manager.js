@@ -9,9 +9,12 @@ const {Session} = require("session");
 const {SessionDisplay} = require("session_display");
 const {SessionPanel} = require("session_panel");
 const {WindowSession} = require("window_session");
+const {CookieMonster} = require("cookie_monster");
 
 let WindowManager = EventEmitter.compose({
     constructor: function() {
+        this.cookieManager = new CookieMonster();
+
         let delegate = {
             onTrack: onTrack.bind(this),
             onUntrack: onUntrack.bind(this)
@@ -43,7 +46,10 @@ function onTrack(window) {
        //  console.log('catching error');
      }
 
-     let session = new Session();
+     let session = new Session({
+        cookieManager: this.cookieManager, 
+        host: doc.location.host
+     });
      let windowSession = new WindowSession({
          session: session
      });
