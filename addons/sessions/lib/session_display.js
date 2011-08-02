@@ -30,6 +30,7 @@ const SessionDisplay = EventEmitter.compose({
         attachSessionEvents.call(this);
         
         this.identityBox = document.getElementById("identity-box");
+        this.origLeft = this.identityBox.style.paddingLeft;
         
         this.hide();
     },
@@ -42,7 +43,6 @@ const SessionDisplay = EventEmitter.compose({
         
     show: function() {
         this.box.show();
-        this.origLeft = this.identityBox.style.paddingLeft;
         this.identityBox.style.paddingLeft = "10px";
 
         this._emit("show");
@@ -51,6 +51,7 @@ const SessionDisplay = EventEmitter.compose({
 
     hide: function() {
         this.box.hide();
+        console.log("reset padding: " + this.origLeft);
         this.identityBox.style.paddingLeft = this.origLeft;
         this._emit("hide");
     }
