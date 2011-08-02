@@ -7,7 +7,7 @@ let Session = function(config) {
 
     session.getActive = getActive;
 
-    if (config) {
+    if (config && config.bindings) {
       session.noInfo = noInfo;
       // Have to bind it to the session - it is used as a callback
       session.onBindingRemove = onBindingRemove.bind(session);
