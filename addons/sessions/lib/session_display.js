@@ -17,6 +17,7 @@
 
 const {Cc, Ci, Cs, Cr} = require("chrome");
 const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
+const SVG_NS = "http://www.w3.org/2000/svg";
 const {EventEmitter} = require("events");
 const STATUS_SHOW = ["loggedin","login"];
 
@@ -27,19 +28,31 @@ const SessionDisplay = EventEmitter.compose({
       
         createUI.call(this, document);    
         attachSessionEvents.call(this);
-
-
+        
+        this.identityBox = document.getElementById("identity-box");
+        this.origLeft = this.identityBox.style.paddingLeft;
+        
         this.hide();
+    },
+
+    teardown: function() {
+        if(this.box) {
+            this.box.parentNode.removeChild();
+        }
     },
         
     show: function() {
         this.box.show();
+        this.identityBox.style.paddingLeft = "10px";
+
         this._emit("show");
     },
 
 
     hide: function() {
         this.box.hide();
+        console.log("reset padding: " + this.origLeft);
+        this.identityBox.style.paddingLeft = this.origLeft;
         this._emit("hide");
     }
 });
@@ -50,22 +63,82 @@ function createUI(document) {
     this.box = createNode(document, "box", {
         id: "identity-session-box"
     });
+    addHoverEvents.call(this, this.box);
+    this.box.addEventListener("click", function() {
+        this._emit(this.eventToEmit); 
+    }.bind(this), false);
 
     this.signIn = createNode(document, "label", {
         id: "identity-session-signin",
         value: "Sign in",
         parentNode: this.box
     });
-    this.signIn.addEventListener("click", this._emit.bind(this, "login"), false);
 
     this.userInfo = createNode(document, "label", {
         id: "identity-session-userinfo",
         value: "",
         parentNode: this.box
     });
-    this.userInfo.addEventListener("click", this._emit.bind(this, "userinfo"), false);
 
-    let insertBefore = document.getElementById("notification-popup-box");
+    this.svg = createNode(document, "svg", {
+        id: "identity-session-arrow",
+        height: "18px",
+        width: "10px",
+        viewBox: "0 0 20 20",
+        preserveAspectRatio: "none",
+        version: "1.1",
+        baseProfile: "full",
+        parentNode: this.box
+    }, SVG_NS);
+
+    let defs = createNode(document, "defs", {
+        parentNode: this.svg
+    }, SVG_NS);
+
+    let gradient = createNode(document, "linearGradient", {
+        id: "sessionArrowGradient",
+        parentNode: defs,
+        x1: "100%",
+        y1: "100%"
+    }, SVG_NS);
+
+    let start = createNode(document, "stop", {
+        offset: "0%",
+        "stop-color": "#cccccc",
+        parentNode: gradient
+    }, SVG_NS);
+
+    let end = createNode(document, "stop", {
+        offset: "100%",
+        "stop-color": "#ffffff",
+        parentNode: gradient
+    }, SVG_NS);
+    this.end = end;
+
+    let arrow = createNode(document, "polygon", {
+      points: "0,1 19,10 0,19",
+      fill: "url(#sessionArrowGradient)",
+      parentNode: this.svg,
+    }, SVG_NS);
+    addHoverEvents.call(this, arrow);
+
+    let arrowBorderTop = createNode(document, "line", {
+      x1: "0",
+      y1: "1",
+      x2: "19",
+      y2: "10",
+      parentNode: this.svg,
+    }, SVG_NS);
+
+    let arrowBorderBottom = createNode(document, "line", {
+      x1: "0",
+      y1: "19",
+      x2: "19",
+      y2: "10",
+      parentNode: this.svg,
+    }, SVG_NS);
+
+    let insertBefore = document.getElementById("identity-box");
     if(insertBefore) {
         insertBefore.parentNode.insertBefore(this.box, insertBefore);
     }
@@ -101,11 +174,13 @@ function setStatus(status) {
         case "login":
             this.signIn.show();
             this.userInfo.hide();
+            this.eventToEmit = "login";
             this.show();
             break;
         case "loggedin":
             this.signIn.hide();
             this.userInfo.show();
+            this.eventToEmit = "userinfo";
             this.show();
             break;
         default:
@@ -116,8 +191,8 @@ function setStatus(status) {
 
 
 const NODE_SPECIAL = ["parentNode"];
-function createNode(document, nodeName, attribs) {
-     let node = document.createElementNS(XUL_NS, nodeName);
+function createNode(document, nodeName, attribs, ns) {
+     let node = document.createElementNS(ns || XUL_NS, nodeName);
 
      node.show = function() {
         node.collapsed = node.hidden = false;
@@ -133,7 +208,7 @@ function createNode(document, nodeName, attribs) {
             node.setAttribute(attrib, val);
          }
          else if(attrib === "parentNode") {
-             val.insertBefore(node, null);
+             val.appendChild(node);
          }
      }
 
@@ -141,4 +216,13 @@ function createNode(document, nodeName, attribs) {
 }
 
 
-
+function addHoverEvents(el) {
+  var me=this;
+  el.addEventListener("mouseover", function(event) {
+    /* This is 1-x where x is the first percentage in identity-session.css */
+    me.end.setAttribute("offset", "60%");
+  }, false);
+  el.addEventListener("mouseout", function(event) {
+    me.end.setAttribute("offset", "100%");
+  }, false);
+}
