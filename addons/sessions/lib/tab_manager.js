@@ -16,8 +16,8 @@ let TabManager = function(config) {
     for each(let tab in tabs) {
         createTabSession.call(this, tab);
     }
-    tabs.on("open", createTabSession);
-    tabs.on("activate", setActiveTab);
+    tabs.on("open", createTabSession.bind(this));
+    tabs.on("activate", setActiveTab.bind(this));
     tabs.on("ready", onTabReady.bind(this));
 };
 TabManager.prototype = {
@@ -42,12 +42,12 @@ function createTabSession(tab) {
         tab.__defineGetter__('session', function() { return model; });
         tab.__defineGetter__('sessions', function() { return model.sessions; });
         tab.__defineSetter__('sessions', function(sessions) { model.sessions = sessions; });
-        setActiveTab(tab);
+        setActiveTab.call(this, tab);
     }
 }
 
 function setActiveTab(tab) {
-    //console.log("new tab made active");
+    this.activeTab = tab;
     tab.window.session = tab.session;
 }
 

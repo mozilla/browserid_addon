@@ -6,14 +6,14 @@ let Session = function(config) {
     });
 
     session.getActive = getActive;
+    session.noInfo = noInfo;
 
     if (config && config.bindings) {
-      session.noInfo = noInfo;
       // Have to bind it to the session - it is used as a callback
       session.onBindingRemove = onBindingRemove.bind(session);
+      session.getSavedSessions = getSavedSessions;
       session.addBinding = addBinding;
       session.removeBinding = removeBinding;
-      session.getSavedSessions = getSavedSessions;
       session.host = config.host;
       session.bindings = config.bindings;
       session.bindings.on("remove", session.onBindingRemove);
@@ -46,7 +46,7 @@ function getActive() {
 }
 
 function noInfo() {
-  this.sessions = this.getSavedSessions(this.host);
+  this.sessions = this.getSavedSessions && this.getSavedSessions(this.host);
 }
 
 function onBeforeSetSessions(sessions) {
@@ -92,8 +92,8 @@ function removeBinding() {
 }
 
 function getSavedSessions(host) {
-  let binding = this.bindings.get(host);
-  let sessions = binding ? [binding] : undefined;
+  let binding = this.bindings && this.bindings.get(host);
+  let sessions = binding && [binding];
 
   return sessions;
 }

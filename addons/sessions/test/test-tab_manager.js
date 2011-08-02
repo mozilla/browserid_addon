@@ -31,7 +31,8 @@ exports["each initially open tab has a session"] = function(test) {
 
 exports["new tabs get a session"] = function(test) {
   tabs.on("open", function(tab) {
-      test.assertStrictEqual(!!tab.session, true, "new tab has a session");
+      test.assertNotUndefined(tab.session, "new tab has a session");
+      test.assertNotUndefined(tab.session.bindings, "new tab has bindings too");
       tab.activate();
 
       test.done();
@@ -41,7 +42,6 @@ exports["new tabs get a session"] = function(test) {
 };
 
 exports["Window's session is updated whenever a new tab is made active"] = function(test) {
-  //tabs.open("http://www.mozilla.com");
   let tab = tabs[0];
   tab.session.sessions = ['asdf'];
   tab.activate();
@@ -50,24 +50,8 @@ exports["Window's session is updated whenever a new tab is made active"] = funct
   let tabSession = tab.session;
 
 
-  /*console.log("windowSession: ");
-  Helpers.toConsole(windowSession);
-  console.log("tabSession: ");
-  Helpers.toConsole(tabSession);
-  */
   test.expectFail(function() {
     test.assertEqual(windowSession.length, tabSession.sessions.length, "windows session updated whenever a new tab is made active");
   });
 };
-/*
-exports["sessionsUpdate with status set to null sets session status to none"] = function(test) {
-  let tab = tabs.activeTab;
-  let session = tab.session;
 
-  tm.sessionsUpdate(tab, {
-      sessions: null
-  });
-
-  test.assertEqual(session.sessions, null, "session\'s sessions set to null");
-};
-*/
