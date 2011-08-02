@@ -186,9 +186,20 @@ exports["Changing the host, then going back to host gets former session"] = func
   session.noInfo();
   active = session.getActive();
   test.assertNotUndefined(active, "going back to host that had a binding restores sessions");
-
-
 };
+
+exports["creating a session with no bindings still allows noInfo to be called"] = function(test) {
+  let session = new Session();
+
+  session.noInfo();
+  test.pass();
+};
+
+
+
+
+
+
 
 
 
