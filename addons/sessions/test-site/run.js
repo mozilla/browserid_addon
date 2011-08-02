@@ -15,14 +15,12 @@ app.get("/", function(req, res) {
 });
 
 app.get("/set_login.html", function(req, res) {
-
   res.render("set_login.ejs", {
     title: "Login without cookie"
   });
 });
 
 app.get("/set_cookie.html", function(req, res) {
-
   res.cookie("SID", "fakeSID");
   res.render("set_cookie.ejs", {
     title: "Login with cookie"
@@ -30,9 +28,7 @@ app.get("/set_cookie.html", function(req, res) {
 });
 
 app.get("/logout.html", function(req, res) {
-
   res.clearCookie("SID");
-
   res.render("logout.ejs", {
     title: "You are logged out"
   });
