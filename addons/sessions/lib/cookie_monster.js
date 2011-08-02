@@ -30,6 +30,10 @@ CookieMonster.prototype = {
     getHandlers: function(host, name) {
         var handlers = this.handlers[name + host] = this.handlers[name + host] || [];
         return handlers;
+    },
+
+    clear: function() {
+        this.handlers = {};
     }
 
 };
@@ -49,7 +53,6 @@ function onCookieChange(subject, data) {
     var name = cookieInfo.name;
     var host = cookieInfo.host;
     
-    //console.log("cookie change: " + host + ':' + name + " action: " + data); 
     callHandlers.call(this, host, name, cookieInfo.value);
 }
 
