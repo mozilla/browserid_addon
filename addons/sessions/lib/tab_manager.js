@@ -3,11 +3,15 @@
 const {Session} = require("session");
 const {Helpers} = require("helpers");
 const {CookieMonster} = require("cookie_monster");
+const {Bindings} = require("bindings");
 const tabs = require("tabs");
 const timers = require("timers");
 
 let TabManager = function(config) {
-    this.cookieManager = new CookieMonster();
+    let cookieManager = new CookieMonster();
+    this.bindings = new Bindings({
+      cookieManager: cookieManager
+    });
 
     for each(let tab in tabs) {
         createTabSession.call(this, tab);
@@ -31,7 +35,7 @@ TabManager.prototype = {
 function createTabSession(tab) {
     if(!tab.session) {
         let model = new Session({
-          cookieManager: this.cookieManager, 
+          bindings: this.bindings, 
           host: tab.url
         });
 

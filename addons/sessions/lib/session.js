@@ -3,7 +3,7 @@ let {Helpers} = require("helpers");
 
 let Session = function(config) {
     let session = new Model({
-        fields: ["sessions","host"]
+        fields: ["sessions", "host"]
     });
 
     session.getActive = getActive;
@@ -11,11 +11,12 @@ let Session = function(config) {
     if(config) {
       session.noInfo = noInfo;
       // Have to bind it to the session - it is used as a callback
-      session.onCookieChange = onCookieChange.bind(session);
+      session.onBindingRemove = onBindingRemove.bind(session);
       session.addBinding = addBinding;
       session.removeBinding = removeBinding;
       session.host = config.host;
-      session.cookieManager = config.cookieManager;
+      session.bindings = config.bindings;
+      session.bindings.on("remove", session.onBindingRemove);
       session.on("beforeset:host", onBeforeSetHost.bind(session));
       session.on("beforeset:sessions", onBeforeSetSessions.bind(session));
       session.on("set:sessions", onSetSessions.bind(session));
@@ -45,7 +46,11 @@ function getActive() {
 }
 
 function noInfo() {
-  if (!this.binding) {
+  let binding = this.bindings.get(this.host);
+  if(binding) {
+    //this.sessions = [binding];
+  }
+  else {
     this.sessions = undefined;
   }
 }
@@ -56,9 +61,8 @@ function onBeforeSetSessions(sessions) {
 
 function onSetSessions(sessions) {
   let active = this.getActive();
-  let binding = active && active.bound_to;
 
-  this.addBinding(binding);
+  this.addBinding(active);
 }
 
 function onBeforeSetHost(host) {
@@ -67,26 +71,24 @@ function onBeforeSetHost(host) {
   }
 }
 
-function onCookieChange() {
-  this.removeBinding();
+function onBindingRemove(binding) {
+  if(binding.host === this.host) {
+    this.removeBinding();
+  }
 }
 
-function addBinding(binding) {
-  if (binding && binding.type === "cookie" && this.cookieManager) {
-    this.binding = {
-      host: this.host,
-      name: binding.name,
-      type: binding.type
-    };
-    this.cookieManager.watch(this.host, binding.name, this.onCookieChange);
+function addBinding(session) {
+  let binding = session && session.bound_to;
+  if (binding && binding.type === "cookie" && this.bindings) {
+    session.host = this.host;
+    this.bindings.add(session);
   }
 }
 
 function removeBinding() {
-  var binding = this.binding;
-  if(binding && binding.type === "cookie" && this.cookieManager) {
-    this.cookieManager.unwatch(binding.host, binding.name, this.onCookieChange);
-    this.binding = undefined;
+  let binding = this.bindings.get(this.host);
+  if(binding && binding.type === "cookie" && this.bindings) {
+    this.bindings.remove(binding.host);
   }
 }
 

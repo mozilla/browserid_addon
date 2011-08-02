@@ -1,14 +1,24 @@
 const {Session} = require("session");
 const {CookieMonster} = require("cookie_monster");
+const {Bindings} = require("bindings");
 
-let session, cookieManager;
+let session, bindings, cookieManager;
 
 exports.setup = function() {
-    cookieManager = new CookieMonster;
+    if(!cookieManager) {
+      cookieManager = new CookieMonster();
+    }
+    cookieManager.clear();
+
+    if(!bindings) {
+      bindings = new Bindings({
+        cookieManager: cookieManager
+      });
+    }
 
     session = new Session({
       host: "www.mozilla.com",
-      cookieManager: cookieManager 
+      bindings: bindings 
     });
 };
 
@@ -96,11 +106,10 @@ exports["changing a cookie then calling noInfo resets sessions"] = function(test
   }];
 
   cookieManager.simulate("www.mozilla.com", "SID", "newValue");
-
   session.noInfo();
 
   let active = session.getActive();
-  test.assertUndefined(active, "noInfo with after cookies are cleared clears sessions");
+  test.assertUndefined(active, "noInfo after cookies are cleared clears sessions");
 };
 
 exports["changing the sessions causes old bindings to be forgotten"] = function(test) {
@@ -121,7 +130,6 @@ exports["changing the sessions causes old bindings to be forgotten"] = function(
   }];
 
   cookieManager.simulate("www.mozilla.com", "SID", "newValue");
-
   session.noInfo();
 
   let active = session.getActive();
