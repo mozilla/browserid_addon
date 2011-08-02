@@ -7,7 +7,7 @@ let Session = function(config) {
 
     session.getActive = getActive;
 
-    if(config) {
+    if (config) {
       session.noInfo = noInfo;
       // Have to bind it to the session - it is used as a callback
       session.onBindingRemove = onBindingRemove.bind(session);
@@ -50,7 +50,7 @@ function noInfo() {
 }
 
 function onBeforeSetSessions(sessions) {
-  if(!this.hostChange) {
+  if (!this.hostChange) {
     // We only remove bindings IF we are overwriting the
     // bindings for the current host
     this.removeBinding();
@@ -65,14 +65,14 @@ function onSetSessions(sessions) {
 }
 
 function onBeforeSetHost(host) {
-  if(host !== this.host) {
+  if (host !== this.host) {
     this.hostChange = true;
     this.sessions = this.getSavedSessions(host);
   }
 }
 
 function onBindingRemove(binding) {
-  if(binding.host === this.host) {
+  if (binding.host === this.host) {
     this.removeBinding();
   }
 }
@@ -86,7 +86,7 @@ function addBinding(session) {
 }
 
 function removeBinding() {
-  if(this.bindings) {
+  if (this.bindings) {
     this.bindings.remove(this.host);
   }
 }
