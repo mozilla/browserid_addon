@@ -24,3 +24,8 @@
 #identity-session-userinfo {
 }
 
+#identity-session-arrow line {
+  stroke-width: 1px;
+  stroke: #cccccc;
+}
+

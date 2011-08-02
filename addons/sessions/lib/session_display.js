@@ -73,6 +73,7 @@ function createUI(document) {
     this.userInfo.addEventListener("click", this._emit.bind(this, "userinfo"), false);
 
     this.svg = createNode(document, "svg", {
+        id: "identity-session-arrow",
         height: "18px",
         width: "10px",
         viewBox: "0 0 20 20",
@@ -116,8 +117,6 @@ function createUI(document) {
       y1: "1",
       x2: "19",
       y2: "10",
-      stroke: "#cccccc",
-      "stroke-width": "1px",
       parentNode: this.svg,
 
     }, SVG_NS);
@@ -127,8 +126,6 @@ function createUI(document) {
       y1: "19",
       x2: "19",
       y2: "10",
-      stroke: "#cccccc",
-      "stroke-width": "1px",
       parentNode: this.svg,
 
     }, SVG_NS);
