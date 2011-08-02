@@ -15,6 +15,7 @@ exports.setup = function() {
         cookieManager: cookieManager
       });
     }
+    bindings.clear();
 
     session = new Session({
       host: "www.mozilla.com",
@@ -92,7 +93,23 @@ exports["noInfo with cookie set, keeps current session"] = function(test) {
   let active = session.getActive();
   let email = active && active.email;
   test.assertEqual(email, "labs@mozilla.com", "noInfo with cookies set keeps previous email.");
+};
 
+exports["noInfo after session without cookie after session with cookie has no info."] = function(test) {
+  session.sessions = [{
+    email: "labs@mozilla.com",
+    bound_to: {
+      type: "cookie",
+      name: "SID"
+    }
+  }];
+  session.sessions = [{
+    email: "labs@mozilla.com"
+  }];
+  session.noInfo();
+
+  let active = session.getActive();
+  test.assertUndefined(active, "Calling noInfo after setting sessions with no bindings clears bindings");
 };
 
 
@@ -150,5 +167,28 @@ exports["Changing the host clears the sessions"] = function(test) {
   let active = session.getActive();
   test.assertUndefined(active, "setting the host clears the active sessions");
 };
+
+exports["Changing the host, then going back to host gets former session"] = function(test) {
+  session.sessions = [{
+    email: "labs@mozilla.com",
+    bound_to: {
+      type: "cookie",
+      name: "SID"
+    }
+  }];
+
+  session.host = "labs.mozilla.com";
+  session.host = "www.mozilla.com";
+
+  let active = session.getActive();
+  test.assertNotUndefined(active, "going back to host that had a binding restores sessions");
+
+  session.noInfo();
+  active = session.getActive();
+  test.assertNotUndefined(active, "going back to host that had a binding restores sessions");
+
+
+};
+
 
 

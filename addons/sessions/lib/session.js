@@ -1,5 +1,4 @@
 let {Model} = require("model");
-let {Helpers} = require("helpers");
 
 let Session = function(config) {
     let session = new Model({
@@ -14,6 +13,7 @@ let Session = function(config) {
       session.onBindingRemove = onBindingRemove.bind(session);
       session.addBinding = addBinding;
       session.removeBinding = removeBinding;
+      session.getSavedSessions = getSavedSessions;
       session.host = config.host;
       session.bindings = config.bindings;
       session.bindings.on("remove", session.onBindingRemove);
@@ -46,17 +46,16 @@ function getActive() {
 }
 
 function noInfo() {
-  let binding = this.bindings.get(this.host);
-  if(binding) {
-    //this.sessions = [binding];
-  }
-  else {
-    this.sessions = undefined;
-  }
+  this.sessions = this.getSavedSessions(this.host);
 }
 
 function onBeforeSetSessions(sessions) {
-  this.removeBinding();
+  if(!this.hostChange) {
+    // We only remove bindings IF we are overwriting the
+    // bindings for the current host
+    this.removeBinding();
+  }
+  this.hostChange = false;
 }
 
 function onSetSessions(sessions) {
@@ -67,7 +66,8 @@ function onSetSessions(sessions) {
 
 function onBeforeSetHost(host) {
   if(host !== this.host) {
-    this.sessions = undefined;
+    this.hostChange = true;
+    this.sessions = this.getSavedSessions(host);
   }
 }
 
@@ -86,10 +86,17 @@ function addBinding(session) {
 }
 
 function removeBinding() {
-  let binding = this.bindings.get(this.host);
-  if(binding && binding.type === "cookie" && this.bindings) {
-    this.bindings.remove(binding.host);
+  if(this.bindings) {
+    this.bindings.remove(this.host);
   }
 }
+
+function getSavedSessions(host) {
+  let binding = this.bindings.get(host);
+  let sessions = binding ? [binding] : undefined;
+
+  return sessions;
+}
+
 
 exports.Session = Session;
