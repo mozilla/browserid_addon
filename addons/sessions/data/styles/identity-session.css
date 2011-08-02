@@ -6,11 +6,12 @@
 }
 
 #identity-session-signin, #identity-session-userinfo {
-    margin: 1px 0 1px 1px;
+    margin: 1px -1px 1px 1px;
     padding: 0 5px;
     border: 1px solid #555;
     border-radius: 2px 0 0 2px;
-    border-color: #C2C2C2 #809ec7 #8b8b8b #979797;
+    border-color: #ccc;
+    border-width: 1px 0 1px 1px;
     background: -moz-linear-gradient(center top, #ffffff 0%, #cccccc 100%);
     color: #555;
     font-size: .9em;
