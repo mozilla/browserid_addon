@@ -17,11 +17,10 @@
     font-size: .9em;
 }
 
-#identity-session-signin:hover, #identity-session-userinfo:hover {
+#identity-session-box:hover #identity-session-signin, 
+#identity-session-box:hover #identity-session-userinfo {
+    /* If the percentages change, the arrow has to change in code as well */
     background: -moz-linear-gradient(center top, #ffffff 40%, #cccccc 100%);
-}
-
-#identity-session-userinfo {
 }
 
 #identity-session-arrow line {

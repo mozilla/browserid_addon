@@ -29,7 +29,6 @@ const SessionDisplay = EventEmitter.compose({
         createUI.call(this, document);    
         attachSessionEvents.call(this);
 
-
         this.hide();
     },
 
@@ -57,20 +56,22 @@ function createUI(document) {
     this.box = createNode(document, "box", {
         id: "identity-session-box"
     });
+    addHoverEvents.call(this, this.box);
+    this.box.addEventListener("click", function() {
+        this._emit(this.eventToEmit); 
+    }.bind(this), false);
 
     this.signIn = createNode(document, "label", {
         id: "identity-session-signin",
         value: "Sign in",
         parentNode: this.box
     });
-    this.signIn.addEventListener("click", this._emit.bind(this, "login"), false);
 
     this.userInfo = createNode(document, "label", {
         id: "identity-session-userinfo",
         value: "",
         parentNode: this.box
     });
-    this.userInfo.addEventListener("click", this._emit.bind(this, "userinfo"), false);
 
     this.svg = createNode(document, "svg", {
         id: "identity-session-arrow",
@@ -100,17 +101,19 @@ function createUI(document) {
         parentNode: gradient
     }, SVG_NS);
 
-    let start = createNode(document, "stop", {
+    let end = createNode(document, "stop", {
         offset: "100%",
         "stop-color": "#ffffff",
         parentNode: gradient
     }, SVG_NS);
+    this.end = end;
 
     let arrow = createNode(document, "polygon", {
       points: "0,1 19,10 0,19",
       fill: "url(#sessionArrowGradient)",
       parentNode: this.svg,
     }, SVG_NS);
+    addHoverEvents.call(this, arrow);
 
     let arrowBorderTop = createNode(document, "line", {
       x1: "0",
@@ -118,7 +121,6 @@ function createUI(document) {
       x2: "19",
       y2: "10",
       parentNode: this.svg,
-
     }, SVG_NS);
 
     let arrowBorderBottom = createNode(document, "line", {
@@ -127,7 +129,6 @@ function createUI(document) {
       x2: "19",
       y2: "10",
       parentNode: this.svg,
-
     }, SVG_NS);
 
     let insertBefore = document.getElementById("identity-box");
@@ -166,11 +167,13 @@ function setStatus(status) {
         case "login":
             this.signIn.show();
             this.userInfo.hide();
+            this.eventToEmit = "login";
             this.show();
             break;
         case "loggedin":
             this.signIn.hide();
             this.userInfo.show();
+            this.eventToEmit = "userinfo";
             this.show();
             break;
         default:
@@ -206,4 +209,13 @@ function createNode(document, nodeName, attribs, ns) {
 }
 
 
-
+function addHoverEvents(el) {
+  var me=this;
+  el.addEventListener("mouseover", function(event) {
+    /* This is 1-x where x is the first percentage in identity-session.css */
+    me.end.setAttribute("offset", "60%");
+  }, false);
+  el.addEventListener("mouseout", function(event) {
+    me.end.setAttribute("offset", "100%");
+  }, false);
+}
