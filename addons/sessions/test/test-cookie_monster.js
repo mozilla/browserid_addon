@@ -56,6 +56,17 @@ exports["changes with cookie"] = function(test) {
     test.assertEqual(success, true, "our cookie stuff works!");
 };
 
+exports["clear clears bindings"] = function(test) {
+    monster.watch("mozilla", "test-cookie", function(value) {
+      test.fail("monster should have been cleared");
+    });
+
+    monster.clear();
+    monster.simulate("mozilla", "test-cookie", "test-value");
+
+    test.pass();
+};
+
 function createCookie(name,value,days) {
     if (days) {
         var date = new Date();
