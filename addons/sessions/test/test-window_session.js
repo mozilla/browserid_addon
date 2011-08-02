@@ -2,14 +2,12 @@
 
 const {WindowSession} = require("window_session");
 const {Session} = require("session");
-const {CookieMonster} = require("cookie_monster");
 
 let ws, session;
 
 exports.setup = function() {
     session = new Session({
-      host: "www.mozilla.com",
-      cookieManager: new CookieMonster()
+      host: "www.mozilla.com"
     });
     ws = new WindowSession({
         session: session
@@ -22,8 +20,7 @@ exports['do we have a window manager'] = function(test) {
 
 exports['setSession updates current session'] = function(test) {
     let newSession = new Session({
-      host: "www.mozilla.com",
-      cookieManager: new CookieMonster()
+      host: "www.mozilla.com"
     });
     newSession.sessions = [{
       email: "stomlinson@mozilla.com"
@@ -36,8 +33,7 @@ exports['setSession updates current session'] = function(test) {
 
 exports['updating session after it is set current updates the currentSession'] = function(test) {
     let newSession = new Session({
-      host: "www.mozilla.com",
-      cookieManager: new CookieMonster()
+      host: "www.mozilla.com"
     });
 
     ws.session = newSession;
@@ -52,12 +48,10 @@ exports['updating session after it is set current updates the currentSession'] =
 
 exports['multiple sessions works alright'] = function(test) {
     let firstSession = new Session({
-      host: "www.mozilla.com",
-      cookieManager: new CookieMonster()
+      host: "www.mozilla.com"
     });
     let secondSession = new Session({
-      host: "www.mozilla.com",
-      cookieManager: new CookieMonster()
+      host: "www.mozilla.com"
     });
 
     ws.session = firstSession;
