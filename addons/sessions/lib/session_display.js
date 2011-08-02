@@ -28,7 +28,9 @@ const SessionDisplay = EventEmitter.compose({
       
         createUI.call(this, document);    
         attachSessionEvents.call(this);
-
+        
+        this.identityBox = document.getElementById("identity-box");
+        
         this.hide();
     },
 
@@ -40,12 +42,16 @@ const SessionDisplay = EventEmitter.compose({
         
     show: function() {
         this.box.show();
+        this.origLeft = this.identityBox.style.paddingLeft;
+        this.identityBox.style.paddingLeft = "10px";
+
         this._emit("show");
     },
 
 
     hide: function() {
         this.box.hide();
+        this.identityBox.style.paddingLeft = this.origLeft;
         this._emit("hide");
     }
 });

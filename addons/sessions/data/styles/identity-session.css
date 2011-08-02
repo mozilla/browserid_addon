@@ -1,8 +1,8 @@
 @namespace xul url(http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul);  
 
-#identity-sessions-box {
-    margin: 0;
-    padding: 0;
+#identity-session-box {
+    position: relative;
+    z-index: 2;
 }
 
 #identity-session-signin, #identity-session-userinfo {
@@ -23,8 +23,17 @@
     background: -moz-linear-gradient(center top, #ffffff 40%, #cccccc 100%);
 }
 
+#identity-session-box svg {
+    margin-right: -11px;
+}
+
 #identity-session-arrow line {
-  stroke-width: 1px;
-  stroke: #cccccc;
+    stroke-width: 1px;
+    stroke: #cccccc;
+}
+
+#identity-box {
+    z-index: 1;
+    position: relative;
 }
 
