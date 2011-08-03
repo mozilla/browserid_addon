@@ -23,7 +23,7 @@
                     email: email,
                     bound_to: {
                         type: "cookie",
-                        name: "SID"
+                        name: "_twitter_sess"
                     }
                 });
             }
