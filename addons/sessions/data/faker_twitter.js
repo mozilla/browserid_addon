@@ -17,6 +17,7 @@
         for(let index = 0, loginEl; index < count; ++index) {
             loginEl = loginEls[index];
             let email = loginEl.innerHTML;
+            email = email.trim();
             if(email) {
                 sessions.push({
                     email: email,
