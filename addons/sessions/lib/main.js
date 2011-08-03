@@ -31,6 +31,7 @@ let pageMod = PageMod({
         worker.tab.worker = worker;
         worker.port.on("sessions.set", onSessionSet.bind(worker));
         worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
+        worker.port.on("sessions.tabready", onSessionTabReady.bind(worker));
     }
 });
 
@@ -45,7 +46,9 @@ function onSessionTabOpen(data) {
     tabManager.sessionReset(this.tab, data);
 };
 
-
+function onSessionTabReady() {
+    tabManager.tabReady(this.tab);
+};
 
 function emitEvent(eventName) {
     let tab = tabs.activeTab;

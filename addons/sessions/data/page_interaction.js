@@ -18,6 +18,9 @@
 
     self.port.on("emitevent.login", emitEvent.bind(undefined, "login"));
     self.port.on("emitevent.logout", emitEvent.bind(undefined, "logout"));
+    self.port.on("forcepageinit", init);
+
+    init();
 
     function emitEvent(name) {
         var doc = unsafeWindow.document;
@@ -26,10 +29,16 @@
         doc.dispatchEvent(evt);
     }
 
-    if(unsafeWindow.top === unsafeWindow.self) {
-        self.port.emit("sessions.opentab", {
-          host: unsafeWindow.document.location.host 
-        });
+    function init() {
+      if(unsafeWindow.top === unsafeWindow.self) {
+          unsafeWindow.addEventListener("load", function() {
+            self.port.emit("sessions.tabready");
+          }, false);
+
+          self.port.emit("sessions.opentab", {
+            host: unsafeWindow.document.location.host 
+          });
+      }
     }
 }());
 

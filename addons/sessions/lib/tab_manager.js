@@ -18,17 +18,21 @@ let TabManager = function(config) {
     }
     tabs.on("open", createTabSession.bind(this));
     tabs.on("activate", setActiveTab.bind(this));
-    tabs.on("ready", onTabReady.bind(this));
 };
 TabManager.prototype = {
     constructor: TabManager,
+    tabReady: function(tab, data) {
+      if(this._resetSession) {
+          tab.session.noInfo();
+      }
+    },
     sessionUpdate: function(tab, data) {
        tab.sessions = data.sessions;
        this._resetSession = false;
     },
     sessionReset: function(tab, data) {
-        tab.session.host = data.host;
-        this._resetSession = true;
+       tab.session.host = data.host;
+       this._resetSession = true;
     }
 };
 
@@ -49,12 +53,6 @@ function createTabSession(tab) {
 function setActiveTab(tab) {
     this.activeTab = tab;
     tab.window.session = tab.session;
-}
-
-function onTabReady(tab){
-  if(this._resetSession) {
-      tab.session.noInfo();
-  }
 }
 
 exports.TabManager = TabManager;
