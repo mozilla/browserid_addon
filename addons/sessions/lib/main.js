@@ -17,6 +17,20 @@ Fakers();
 let windowManager = new WindowManager();
 windowManager.on("login", emitEvent.bind(null, "emitevent.login"));
 windowManager.on("logout", emitEvent.bind(null, "emitevent.logout"));
+windowManager.on("currentTabLoad", function(window, host) {
+  let active = tabs.activeTab;
+  if(active) {
+    tabManager.sessionReset(active, {
+      host: host  
+    });
+
+    if(active.worker) {
+        console.log("getting new sessions");
+//        active.worker.port.emit("sessions.get");
+    }
+  }
+});
+
 let tabManager = new TabManager();
 
 let currWorker;

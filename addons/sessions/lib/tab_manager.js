@@ -53,6 +53,7 @@ function createTabSession(tab) {
 function setActiveTab(tab) {
     this.activeTab = tab;
     tab.window.session = tab.session;
+    tab.window.activeTab = tab;
 }
 
 exports.TabManager = TabManager;

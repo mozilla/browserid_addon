@@ -8,17 +8,14 @@
         get: function() { return sessions; },
         set: function(newSessions) { 
             sessions = newSessions; 
-            self.port.emit("sessions.set", {
-                sessions: sessions,
-                host: unsafeWindow.document.location.host
-            });
+            broadcastSessions();
             return true; 
         }
     });
 
     self.port.on("emitevent.login", emitEvent.bind(undefined, "login"));
     self.port.on("emitevent.logout", emitEvent.bind(undefined, "logout"));
-    self.port.on("forcepageinit", init);
+    self.port.on("sessions.get", broadcastSessions);
 
     init();
 
@@ -39,6 +36,14 @@
             host: unsafeWindow.document.location.host 
           });
       }
+    }
+
+    function broadcastSessions() {
+        console.log("broadcastingSessions");
+        self.port.emit("sessions.set", {
+            sessions: sessions,
+            host: unsafeWindow.document.location.host
+        });
     }
 }());
 
