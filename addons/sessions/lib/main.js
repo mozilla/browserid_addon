@@ -28,7 +28,6 @@ let pageMod = PageMod({
     onAttach: function(worker) {
         Helpers.workers.prepare(worker);
 
-        worker.tab.worker = worker;
         worker.port.on("sessions.set", onSessionSet.bind(worker));
         worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
     }
@@ -37,11 +36,13 @@ let pageMod = PageMod({
 
 
 function onSessionSet(data) {
+    this.tab.worker = this;
     tabManager.sessionsUpdate(this.tab, data);
 }
 
 
 function onSessionTabOpen(data) {
+    this.tab.worker = this;
     tabManager.sessionReset(this.tab, data);
 };
 
