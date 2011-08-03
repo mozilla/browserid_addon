@@ -22,7 +22,7 @@ let TabManager = function(config) {
 };
 TabManager.prototype = {
     constructor: TabManager,
-    sessionsUpdate: function(tab, data) {
+    sessionUpdate: function(tab, data) {
        tab.sessions = data.sessions;
        this._resetSession = false;
     },

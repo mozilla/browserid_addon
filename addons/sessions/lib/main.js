@@ -37,7 +37,7 @@ let pageMod = PageMod({
 
 
 function onSessionSet(data) {
-    tabManager.sessionsUpdate(this.tab, data);
+    tabManager.sessionUpdate(this.tab, data);
 }
 
 
