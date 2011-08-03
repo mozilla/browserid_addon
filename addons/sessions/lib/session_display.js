@@ -51,7 +51,6 @@ const SessionDisplay = EventEmitter.compose({
 
     hide: function() {
         this.box.hide();
-        console.log("reset padding: " + this.origLeft);
         this.identityBox.style.paddingLeft = this.origLeft;
         this._emit("hide");
     }
