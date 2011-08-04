@@ -1,9 +1,0 @@
-{
-    "name": "browserid_addon",
-    "license": "MPL 1.1/GPL 2.0/LGPL 2.1",
-    "author": "Mozilla Labs",
-    "version": "0.1.1",
-    "fullName": "browserid_addon",
-    "id": "browserid_addon@mozillalabs.com",
-    "description": "Log in to browserid.org directly from Firefox!"
-}
