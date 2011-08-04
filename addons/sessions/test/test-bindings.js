@@ -14,19 +14,15 @@ let bindings, cookieManager,
     };
 
 exports.setup = function() {
-  if(!cookieManager) {
-    cookieManager = new CookieMonster();
-  }
-  cookieManager.clear();
+  cookieManager = new CookieMonster();
 
   bindings = new Bindings({
     cookieManager: cookieManager 
   });
-
-  bindings.clear();
 };
 
 exports.teardown = function() {
+  cookieManager.teardown();
   bindings.teardown();
 };
 
