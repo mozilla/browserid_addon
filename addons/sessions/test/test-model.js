@@ -8,6 +8,10 @@ exports.setup = function() {
   });
 }
 
+exports.teardown = function() {
+  model.teardown();
+};
+
 exports['we have an item'] = function(test) {
   test.assertEqual(true, !!model, 'model created');
 };
