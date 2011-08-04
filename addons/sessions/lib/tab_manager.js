@@ -6,11 +6,12 @@ const {CookieMonster} = require("cookie_monster");
 const {Bindings} = require("bindings");
 const tabs = require("tabs");
 const timers = require("timers");
+const unload = require("unload");
 
-let TabManager = function(config) {
-    let cookieManager = new CookieMonster();
+let TabManager = function() {
+    this._cookieManager = new CookieMonster();
     this.bindings = new Bindings({
-      cookieManager: cookieManager
+      cookieManager: this._cookieManager
     });
 
     for each(let tab in tabs) {
@@ -19,9 +20,15 @@ let TabManager = function(config) {
     tabs.on("open", createTabSession.bind(this));
     tabs.on("activate", setActiveTab.bind(this));
     tabs.on("ready", onTabReady.bind(this));
+
+    unload.ensure(this, "teardown");
 };
 TabManager.prototype = {
     constructor: TabManager,
+    teardown: function() {
+      this._cookieManager.teardown();
+      this._cookieManager = null;
+    },
     sessionsUpdate: function(tab, data) {
        tab.sessions = data.sessions;
        this._resetSession = false;
