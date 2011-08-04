@@ -12,21 +12,22 @@ nav.id.channel.registerController = function(controller) {
 };
 
 self.port.on("getVerifiedEmail", function(payload) {
-    browseridController.getVerifiedEmail.call( browseridController,
+    browseridController.getVerifiedEmail.call(browseridController,
         payload.host, 
-        unsafeWindow.onGetAssertionSuccess,
-        unsafeWindow.onGetAssertionFailure
+        onGetAssertionSuccess,
+        onGetAssertionFailure
     );
 });
 
-unsafeWindow.onGetAssertionSuccess = function(assertion) {
-    //console.log("getVerifiedEmail assertion: " + assertion);
+function onGetAssertionSuccess(assertion) {
     self.port.emit("assertionReady", {
         assertion: assertion
     });
 }
 
-unsafeWindow.onGetAssertionFailure = function() {
-    //console.log("failure getting verified email");
+function onGetAssertionFailure(reason) {
+    self.port.emit("assertionFailure", {
+        reason: reason
+    });
 }
 

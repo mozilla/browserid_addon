@@ -3,8 +3,13 @@
 
     self.port.on("assertionReady", function(payload) {
         if(assertionCallback) {
-//            console.log("The assertion is finally ready! " + payload.assertion);
             assertionCallback(payload.assertion);
+        }
+    });
+
+    self.port.on("assertionFailure", function(payload) {
+        if(assertionCallback) {
+            assertionCallback(null);
         }
     });
 

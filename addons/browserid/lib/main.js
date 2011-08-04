@@ -13,7 +13,7 @@ function AuthLoader() {
 }
 
 function showPanel(host, worker) {
-    var panel = createShowPanel();
+    let panel = createShowPanel();
 
     panel.port.on("controllerReady", function() {
         panel.port.emit("getVerifiedEmail", {
@@ -21,13 +21,15 @@ function showPanel(host, worker) {
         });
     });
 
-    panel.port.on("assertionReady", function(payload) {
-        worker.port.emit("assertionReady", {
-            assertion: payload.assertion
-        });
-        panel.hide();
-    });
+    panel.port.on("assertionReady", emitAndHide.bind(null, "assertionReady"));
+    panel.port.on("assertionFailure", emitAndHide.bind(null, "assertionFailure"));
 
+    function emitAndHide(message, payload) {
+        worker.port.emit(message, payload);
+        panel.hide();
+        panel.destroy();
+        panel = null;
+    }
 
 
     return panel;
@@ -49,13 +51,12 @@ function onNewWindow(window) {
             worker.port.on("getAssertion", function(payload) {
                 showPanel(payload.host, worker);
             });
-
         }
     });
 }
 
 function createShowPanel() {
-    var panel = Panel({
+    let panel = Panel({
         contentURL: "https://browserid.org/dialog/dialog.html",
         contentScriptFile: [
             data.url("channel.js")
