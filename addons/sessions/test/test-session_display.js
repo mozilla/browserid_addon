@@ -144,4 +144,11 @@ exports["remove identityBox, make sure things still run"] = function(test) {
       parent.insertBefore(ib, next);
 };
 
+exports["on teardown, there are no buttons"] = function(test) {
+    widget.teardown();
+    let doc = Helpers.chrome.getDocument();
+    let statusBox = doc.getElementById("identity-session-box");
+    test.assertStrictEqual(null, statusBox, "after teardown there is no box");
+};
+
 
