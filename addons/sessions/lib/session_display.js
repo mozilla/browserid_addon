@@ -20,6 +20,7 @@ const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const SVG_NS = "http://www.w3.org/2000/svg";
 const {EventEmitter} = require("events");
 const STATUS_SHOW = ["loggedin","login"];
+const unload = require("unload");
 
 const SessionDisplay = EventEmitter.compose({
     constructor: function(options) {
@@ -34,6 +35,7 @@ const SessionDisplay = EventEmitter.compose({
         this.origLeft = identityBox && identityBox.style.paddingLeft;
         
         this.hide();
+        unload.ensure(this, 'teardown');
     },
 
     teardown: function() {
