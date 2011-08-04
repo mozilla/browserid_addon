@@ -33,14 +33,12 @@ let WindowManager = EventEmitter.compose({
 });
 
 function onTrack(window) {
-     //console.log("onWindowTrack");
      let doc = window.document;
      try {
          let uri = self.data.url("styles/identity-session.css");
          Helpers.chrome.loadStylesheet(uri, doc);
      } catch(e) {
          // do nothing
-       //  console.log('catching error');
      }
 
      let session = new Session();
@@ -72,6 +70,7 @@ function onUntrack(window) {
 
 function onWindowOpen(browserWindow) {
     let windowSession = this.windowSession;
+
     browserWindow.__defineGetter__('session', function() {
         return windowSession.session;
     });
@@ -85,7 +84,6 @@ function onLogin(window) {
 };
 
 function onLogout(window) {
-    //console.log("logout now");
     this._emit("logout", window);
 };
 

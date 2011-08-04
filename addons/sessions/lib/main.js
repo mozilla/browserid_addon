@@ -26,10 +26,10 @@ let pageMod = PageMod({
     contentScriptWhen: "start",
     contentScriptFile: data.url("page_interaction.js"),
     onAttach: function(worker) {
-        Helpers.workers.prepare(worker);
-
+        worker.tab.worker = worker;
         worker.port.on("sessions.set", onSessionSet.bind(worker));
         worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
+        worker.port.on("sessions.tabready", onSessionTabReady.bind(worker));
     }
 });
 
@@ -37,7 +37,7 @@ let pageMod = PageMod({
 
 function onSessionSet(data) {
     this.tab.worker = this;
-    tabManager.sessionsUpdate(this.tab, data);
+    tabManager.sessionUpdate(this.tab, data);
 }
 
 
@@ -46,7 +46,9 @@ function onSessionTabOpen(data) {
     tabManager.sessionReset(this.tab, data);
 };
 
-
+function onSessionTabReady() {
+    tabManager.tabReady(this.tab);
+};
 
 function emitEvent(eventName) {
     let tab = tabs.activeTab;

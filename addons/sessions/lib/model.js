@@ -24,19 +24,21 @@ let Model = EventEmitter.compose({
   },
 
   _onSet: function(name, value) {
-    this._emit("beforeset", {
-      name: name,
-      value: value
-    });
-    this._emit("beforeset:" + name, value);
+    if(this._model[name] !== value) {
+      this._emit("beforeset", {
+        name: name,
+        value: value
+      });
+      this._emit("beforeset:" + name, value);
 
-    this._model[name] = value;
+      this._model[name] = value;
 
-    this._emit("set", {
-      name: name,
-      value: value
-    });
-    this._emit("set:" + name, value);
+      this._emit("set", {
+        name: name,
+        value: value
+      });
+      this._emit("set:" + name, value);
+    }
   },
 
   _onGet: function(name) {

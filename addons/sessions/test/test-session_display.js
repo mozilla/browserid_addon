@@ -10,13 +10,11 @@ let widget, session = new Session({
 });
 
 exports.setup = function() {
-    if(!widget) {
-        let doc = Helpers.chrome.getDocument();
-        widget = SessionDisplay({
-            document: doc,
-            session: session
-        });
-    }
+    let doc = Helpers.chrome.getDocument();
+    widget = SessionDisplay({
+        document: doc,
+        session: session
+    });
     widget.hide();
 };
 
@@ -83,6 +81,9 @@ exports["hide hides the box"] = function(test) {
 
 
 exports["setting no sessions hides the box"] = function(test) {
+    // Prime the sessions or else the model will not update.
+    session.sessions = [];
+
     let success = false;
     widget.on("hide", function() {
         success = true;
@@ -90,7 +91,6 @@ exports["setting no sessions hides the box"] = function(test) {
 
     session.sessions = undefined;
     test.assertStrictEqual(success, true, "Setting no sessions hides the box");
-
 };
 
 exports["setting a the sessions to an empty array shows the box"] = function(test) {

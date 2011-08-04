@@ -82,3 +82,14 @@ exports['two models play nicely'] = function(test) {
   test.assertNotEqual(model2.first, model.first, "changing second model does not affect first model");
 };
 
+exports['no update if values are the same'] = function(test) {
+  model.first = "Mozilla";
+
+  model.on("set", function(info) {
+    test.fail("values are the same, set should have never been called");
+  });
+
+  model.first = "Mozilla";
+  test.pass(); 
+};
+
