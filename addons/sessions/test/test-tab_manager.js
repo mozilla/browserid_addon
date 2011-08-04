@@ -17,6 +17,8 @@ exports.setup = function() {
 exports.teardown = function() {
     tm.teardown();
     wm.teardown();
+
+    tm = wm = null;
 };
 
 exports["can create"] = function(test) {
