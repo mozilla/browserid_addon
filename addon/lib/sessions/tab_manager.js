@@ -1,9 +1,9 @@
 "use strict";
 
-const {Session} = require("session");
-const {Helpers} = require("helpers");
-const {CookieMonster} = require("cookie_monster");
-const {Bindings} = require("bindings");
+const {Session} = require("sessions/session");
+const {Helpers} = require("../helpers");
+const {CookieMonster} = require("sessions/cookie_monster");
+const {Bindings} = require("sessions/bindings");
 const tabs = require("tabs");
 const timers = require("timers");
 const unload = require("unload");

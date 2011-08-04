@@ -1,4 +1,4 @@
-const {Faker} = require("faker");
+const {Faker} = require("sessions/faker");
 const {Helpers} = require("helpers");
 
 var faker;

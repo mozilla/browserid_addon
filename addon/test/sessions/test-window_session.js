@@ -1,7 +1,7 @@
 "use strict";
 
-const {WindowSession} = require("window_session");
-const {Session} = require("session");
+const {WindowSession} = require("sessions/window_session");
+const {Session} = require("sessions/session");
 
 let ws, session;
 

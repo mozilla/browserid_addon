@@ -1,4 +1,4 @@
-let {Model} = require("model");
+let {Model} = require("sessions/model");
 
 let Session = function(config) {
     let session = new Model({

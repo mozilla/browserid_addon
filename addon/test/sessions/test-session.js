@@ -1,6 +1,6 @@
-const {Session} = require("session");
-const {CookieMonster} = require("cookie_monster");
-const {Bindings} = require("bindings");
+const {Session} = require("sessions/session");
+const {CookieMonster} = require("sessions/cookie_monster");
+const {Bindings} = require("sessions/bindings");
 
 let session, bindings, cookieManager;
 

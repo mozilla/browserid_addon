@@ -8,7 +8,7 @@ exports.Faker = function(domain, script) {
     let mod = PageMod({
         include: domains,
         contentScriptWhen: "end",
-        contentScriptFile: data.url(script)
+        contentScriptFile: data.url("sessions/" + script)
     });
 
     mod.teardown = function() {

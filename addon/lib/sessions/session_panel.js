@@ -1,14 +1,14 @@
 const {data} = require("self");
 const {EventEmitter} = require("events");
 const {Panel} = require("panel");
-const {Helpers} = require("./helpers");
+const {Helpers} = require("../helpers");
 const unload = require("unload");
 
 let SessionPanel = EventEmitter.compose({
     constructor: function(config) {
         let panel = this._panel = Panel({
-            contentURL: data.url("sessions.html"),
-            contentScriptFile: data.url("sessions.js")
+            contentURL: data.url("sessions/sessions.html"),
+            contentScriptFile: data.url("sessions/sessions.js")
         });
 
         panel.port.on("sessions.setheight", onPanelSetHeight.bind(this));

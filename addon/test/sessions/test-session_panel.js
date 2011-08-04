@@ -1,8 +1,8 @@
 "use strict";
 
-const {SessionPanel} = require("session_panel");
-const {Session} = require("session");
-const {CookieMonster} = require("cookie_monster");
+const {SessionPanel} = require("sessions/session_panel");
+const {Session} = require("sessions/session");
+const {CookieMonster} = require("sessions/cookie_monster");
 
 let session, sp;
 exports.setup = function() {

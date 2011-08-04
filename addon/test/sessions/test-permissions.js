@@ -1,5 +1,5 @@
 "use strict";
-const {Permissions} = require("permissions");
+const {Permissions} = require("sessions/permissions");
 const tabs = require("tabs");
 
 

@@ -1,4 +1,4 @@
-const {CookieMonster} = require("cookie_monster");
+const {CookieMonster} = require("sessions/cookie_monster");
 const obSvc = require("observer-service");
 const {Cc, Ci} = require("chrome");
 

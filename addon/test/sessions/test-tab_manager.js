@@ -1,7 +1,7 @@
 "use strict";
 
-const {WindowManager} = require("window_manager");
-const {TabManager} = require("tab_manager");
+const {WindowManager} = require("sessions/window_manager");
+const {TabManager} = require("sessions/tab_manager");
 const tabs = require("tabs");
 const {Helpers} = require("helpers");
 

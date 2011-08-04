@@ -1,7 +1,7 @@
 "use strict";
 
-const {Bindings} = require("bindings");
-const {CookieMonster} = require("cookie_monster");
+const {Bindings} = require("sessions/bindings");
+const {CookieMonster} = require("sessions/cookie_monster");
 
 let bindings, cookieManager,
     binding = {

@@ -1,8 +1,8 @@
 const {Cc, Ci} = require("chrome");
-const {SessionDisplay} = require("session_display");
+const {SessionDisplay} = require("sessions/session_display");
 const {Helpers} = require("helpers");
-const {Session} = require("session");
-const {CookieMonster} = require("cookie_monster");
+const {Session} = require("sessions/session");
+const {CookieMonster} = require("sessions/cookie_monster");
 
 let widget, cm, session;
 

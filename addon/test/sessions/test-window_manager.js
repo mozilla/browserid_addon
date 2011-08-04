@@ -1,6 +1,6 @@
 "use strict";
-const {WindowManager} = require("window_manager");
-const {WindowTracker} = require("window-utils");
+const {WindowManager} = require("sessions/window_manager");
+const {WindowTracker} = require("sessions/window-utils");
 const windows = require("windows").browserWindows;
 const {Helpers} = require("helpers");
 

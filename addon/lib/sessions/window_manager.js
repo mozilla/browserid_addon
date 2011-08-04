@@ -3,12 +3,12 @@
 const {EventEmitter} = require("events");
 const {WindowTracker} = require("window-utils");
 const windows = require("windows").browserWindows;
-const {Helpers} = require("./helpers");
+const {Helpers} = require("../helpers");
 const self = require("self");
-const {Session} = require("session");
-const {SessionDisplay} = require("session_display");
-const {SessionPanel} = require("session_panel");
-const {WindowSession} = require("window_session");
+const {Session} = require("sessions/session");
+const {SessionDisplay} = require("sessions/session_display");
+const {SessionPanel} = require("sessions/session_panel");
+const {WindowSession} = require("sessions/window_session");
 const unload = require("unload");
 
 let WindowManager = EventEmitter.compose({
@@ -47,7 +47,7 @@ function onTrack(window) {
 
      let doc = window.document;
      try {
-         let uri = self.data.url("styles/identity-session.css");
+         let uri = self.data.url("sessions/styles/identity-session.css");
          Helpers.chrome.loadStylesheet(uri, doc);
      } catch(e) {
          // do nothing
