@@ -50,36 +50,6 @@ const Helpers = {
                 document.insertBefore(pi, document.firstChild);
             return pi;
         }
-    },
-
-    workers: {
-
-        // Overrides worker.port.on so that listeners are automatically 
-        // detached when the worker is removed.
-        // Not sure if this is strictly needed.
-        prepare: function(worker) {
-            worker.portListeners = {};
-            
-            let origOn = worker.port.on;
-            worker.port.on = function(message, listener) {
-                worker.portListeners[message] = worker.portListeners[message] || [];
-                worker.portListeners[message].push(listener);
-                origOn.call(worker, message, listener);
-            };
-
-            worker.once("detach", function() {
-                for(var key in worker.portListeners) {
-                    var listeners = worker.portListeners[key];
-                    listeners.forEach(function(listener) {
-                        worker.port.removeListener(key, listener);
-                    });
-                    worker.portListeners[key] = null;
-                    delete worker.portListeners[key];
-                }
-            });
-        }
-
-
     }
 };
 
