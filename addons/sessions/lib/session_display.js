@@ -42,6 +42,11 @@ const SessionDisplay = EventEmitter.compose({
         if (this.box && this.box.parentNode) {
             this.box.parentNode.removeChild(this.box);
         }
+
+        let identityBox = getIdentityBox.call(this);
+        if (identityBox) {
+            identityBox.style.paddingLeft = this.origLeft;
+        }
     },
         
     show: function() {
