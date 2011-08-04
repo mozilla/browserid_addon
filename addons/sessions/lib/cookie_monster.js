@@ -15,7 +15,9 @@ CookieMonster.prototype = {
     },
     watch: function(host, name, callback) {
         var handlers = this.getHandlers(host, name);
-        handlers.push(callback);
+        if(handlers) {
+            handlers.push(callback);
+        }
     },
 
     unwatch: function(host, name, callback) {
@@ -34,6 +36,7 @@ CookieMonster.prototype = {
     },
 
     getHandlers: function(host, name) {
+        if(!this.handlers) return;
         var handlers = this.handlers[name + host] = this.handlers[name + host] || [];
         return handlers;
     },
