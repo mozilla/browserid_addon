@@ -20,6 +20,11 @@ exports.setup = function() {
     widget.hide();
 };
 
+exports.teardown = function() {
+    widget.teardown();
+    widget = null;
+};
+
 exports["test creatable"] = function(test) {
     test.assertNotUndefined(widget, "widget has been created");
 };
@@ -29,30 +34,26 @@ exports["adds elements"] = function(test) {
     test.assertEqual(true, !!box, "box has been added");
 };
 
-exports["login emitted when signIn button pressed"] = function(test) {
-    let success = false;
-    widget.on("login", function() {
-        success = true;
-    });
+exports["Event issued whenever we click anywhere on the identity-session-box"] = function(test) {
+    testClick("identity-session-signin");
+    testClick("identity-session-arrow");
+    testClick("identity-session-box");
+    testClick("identity-session-userinfo");
 
-    let signIn = Helpers.chrome.getElementById("identity-session-signin");
-    let evt = Helpers.chrome.simulateDOMEvent(signIn, "MouseEvents", "click");
+    function testClick(id) {
+      let success = false;
+      widget.on("login", function() {
+          success = true;
+      });
 
-    test.assertEqual(success, true, "login event fired on click");
+      widget.setStatus("login");
+      let signIn = Helpers.chrome.getElementById(id);
+      let evt = Helpers.chrome.simulateDOMEvent(signIn, "MouseEvents", "click");
+
+      test.assertEqual(success, true, "login event fired on click");
+
+    }
 };
-
-exports["userinfo emitted when userinfo button pressed"] = function(test) {
-    let success = false;
-    widget.on("userinfo", function() {
-        success = true;
-    });
-
-    let signIn = Helpers.chrome.getElementById("identity-session-userinfo");
-    let evt = Helpers.chrome.simulateDOMEvent(signIn, "MouseEvents", "click");
-
-    test.assertEqual(success, true, "userinfo event fired on click");
-};
-
 
 exports["show shows the box"] = function(test) {
     let success = false;
@@ -116,6 +117,31 @@ exports["setting a session shows the box, updates userinfo"] = function(test) {
     let box = Helpers.chrome.getElementById("identity-session-userinfo");
 
     test.assertEqual(box.value, "shane", "update email, causes userinfo to update");
+};
+
+exports["remove identityBox, make sure things still run"] = function(test) {
+      widget.teardown();
+
+      let doc = Helpers.chrome.getDocument();
+      let ib = doc.getElementById("identity-box");
+      let parent = ib.parentNode;
+      let next = ib.nextSibling;
+
+      parent.removeChild(ib);
+
+      widget = SessionDisplay({
+          document: doc,
+          session: session
+      });
+
+      widget.show();
+      widget.hide();
+
+      let statusBox = doc.getElementById("identity-session-box");
+      test.assertNotStrictEqual(null, statusBox, "Even without the right box to insert before, we have a status box");
+      test.assertNotUndefined(statusBox.parentNode, "statusBox has a parentNode");
+
+      parent.insertBefore(ib, next);
 };
 
 
