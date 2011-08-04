@@ -10,6 +10,7 @@ exports['can create with single page'] = function(test) {
 
     var include = faker.include;
     test.assertEqual(1, include.length, 'includes has 1 item');
+    faker.teardown();
 };
 
 exports['can create with multiple matches'] = function(test) {
@@ -17,5 +18,7 @@ exports['can create with multiple matches'] = function(test) {
 
     var include = faker.include;
     test.assertEqual(2, include.length, 'includes has 2 item');
+    faker.teardown();
 };
+
 
