@@ -1,6 +1,8 @@
 (function() {
     let assertionCallback;
 
+    console.log("injecting: " + unsafeWindow.document.location.host);
+
     self.port.on("assertionReady", function(payload) {
         if(assertionCallback) {
             assertionCallback(payload.assertion);
