@@ -1,9 +1,0 @@
-{
-    "name": "sessions",
-    "license": "MPL 1.1/GPL 2.0/LGPL 2.1",
-    "author": "Mozilla Labs",
-    "version": "0.1.1",
-    "fullName": "Sessions API",
-    "id": "jid1-FSOkwUIAZAuMDA",
-    "description": "User session and status in the browser"
-}
