@@ -1,4 +1,5 @@
 const {EventEmitter} = require("events");
+const unload = require("unload");
 
 let Model = EventEmitter.compose({
   constructor: function(options) {
@@ -7,6 +8,12 @@ let Model = EventEmitter.compose({
     this._fields = [];
 
     fields.forEach(this.addField, this);
+    unload.ensure(this, "teardown");
+  },
+
+  teardown: function() {
+    this._model = null;
+    this._fields = null;
   },
 
   _model: undefined,

@@ -5,22 +5,23 @@ const {Bindings} = require("bindings");
 let session, bindings, cookieManager;
 
 exports.setup = function() {
-    if(!cookieManager) {
-      cookieManager = new CookieMonster();
-    }
-    cookieManager.clear();
+    cookieManager = new CookieMonster();
 
-    if(!bindings) {
-      bindings = new Bindings({
-        cookieManager: cookieManager
-      });
-    }
-    bindings.clear();
+    bindings = new Bindings({
+      cookieManager: cookieManager
+    });
 
     session = new Session({
       host: "www.mozilla.com",
       bindings: bindings 
     });
+};
+
+exports.teardown = function() {
+    cookieManager.teardown();
+    bindings.teardown();
+    session.teardown();
+    session = cookieManager = bindings = null;
 };
 
 exports["check which fields there are"] = function(test) {

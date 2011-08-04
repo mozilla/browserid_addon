@@ -6,12 +6,22 @@ const ioService = Cc["@mozilla.org/network/io-service;1"].getService(Ci.nsIIOSer
 let Svc = {};
 Cu.import("resource://gre/modules/Services.jsm", Svc);
 const perms = Svc.Services.perms;
+const unload = require("unload");
 
 let Permissions = function() {
     this.origPerms = {};
+
+    unload.ensure(this, "teardown");
 };
 
 Permissions.prototype = {
+    teardown: function() {
+        for(let name in this.origPerms) {
+            let perm = this.origPerms[name]; 
+            this.reset(name, perm.tab);
+        }
+    },
+
     allow: function(name, tab) {
         let uri = getURIForTab(tab);
         if (uri) {
@@ -38,31 +48,39 @@ Permissions.prototype = {
         tab = tab || tabs.activeTab;
         let uri = getURIForTab(tab);
         if (uri) {
-            let permName = getTabPermName(name, tab);
-            if (permName in this.origPerms) {
-                let currPerm = this.origPerms[permName];
-                let url = tab.url.replace("http:\/\/","");
-                url = url.split("/")[0];
-
-                if(currPerm === perms.UNKNOWN_ACTION) {
-                    perms.remove(url, name);
-                } else if(currPerm) {
-                    perms.add(uri, name, currPerm);
-                }
-
-                delete this.origPerms[permName];
-            }
+            removePermission.call(this, name, tab);
         }
     }
 };
+
 
 function savePermission(name, tab) {
     let uri = getURIForTab(tab);
     if (uri) {
         let permName = getTabPermName(name, tab);
         if (!(permName in this.origPerms)) {
-            this.origPerms[permName] = perms.testPermission(uri, name);
+            this.origPerms[permName] = {
+              perm: perms.testPermission(uri, name),
+              tab: tab
+            };
         }
+    }
+}
+
+function removePermission(name, tab) {
+    let permName = getTabPermName(name, tab);
+    if (permName in this.origPerms) {
+        let currPerm = this.origPerms[permName].perm;
+        let url = tab.url.replace("http:\/\/","");
+        url = url.split("/")[0];
+
+        if(currPerm === perms.UNKNOWN_ACTION) {
+            perms.remove(url, name);
+        } else if(currPerm) {
+            perms.add(url, name, currPerm);
+        }
+
+        delete this.origPerms[permName];
     }
 }
 

@@ -1,6 +1,7 @@
 "use strict";
 
 const {EventEmitter} = require("events");
+const unload = require("unload");
 
 let Bindings = EventEmitter.compose({
   _bindings: undefined,
@@ -9,6 +10,14 @@ let Bindings = EventEmitter.compose({
   constructor: function(options) {
     this._cookieManager = options.cookieManager;
     this.clear();
+
+    unload.ensure(this, "teardown");
+  },
+
+  teardown: function() {
+    this.clear();
+    this._cookieManager = null;
+    this._bindings = null;
   },
 
   add: function(binding) {
@@ -43,6 +52,9 @@ let Bindings = EventEmitter.compose({
   },
 
   clear: function() {
+    for(let host in this._bindings) {
+      this.remove(host);
+    }
     this._bindings = {};
     this.length = 0;
   }

@@ -14,19 +14,18 @@ let bindings, cookieManager,
     };
 
 exports.setup = function() {
-  if(!cookieManager) {
-    cookieManager = new CookieMonster();
-  }
-  cookieManager.clear();
+  cookieManager = new CookieMonster();
 
-  if(!bindings) {
-    bindings = new Bindings({
-      cookieManager: cookieManager 
-    });
-  }
+  bindings = new Bindings({
+    cookieManager: cookieManager 
+  });
+};
 
-  bindings.clear();
-}
+exports.teardown = function() {
+  cookieManager.teardown();
+  bindings.teardown();
+};
+
 
 exports["can create"] = function(test) {
   test.assertNotUndefined(bindings, "we have bindings");
@@ -67,6 +66,9 @@ exports["can reset the info"] = function(test) {
 
   let getVal = bindings.get("labs.mozilla.com");
   test.assertUndefined(getVal, "Empty collection, no bindings");
+
+  let handlers = cookieManager.getHandlers("labs.mozilla.com", "SID");
+  test.assertEqual(0, handlers.length, "No handlers here!");
 };
 
 exports["Can clear binding by changing cookie"] = function(test) {

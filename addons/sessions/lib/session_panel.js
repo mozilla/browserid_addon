@@ -2,6 +2,7 @@ const {data} = require("self");
 const {EventEmitter} = require("events");
 const {Panel} = require("panel");
 const {Helpers} = require("./helpers");
+const unload = require("unload");
 
 let SessionPanel = EventEmitter.compose({
     constructor: function(config) {
@@ -18,6 +19,13 @@ let SessionPanel = EventEmitter.compose({
         session.on("set:sessions", onSessionUpdate.bind(this));
 
         this._document = config.document;
+        unload.ensure(this, "teardown");
+    },
+
+    teardown: function() {
+        if(!this._panel) return;
+        this._panel.destroy();
+        this._panel = this._document = this._session = null;
     },
 
     show: function() {

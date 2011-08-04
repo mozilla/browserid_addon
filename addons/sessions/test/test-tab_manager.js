@@ -4,15 +4,21 @@ const {WindowManager} = require("window_manager");
 const {TabManager} = require("tab_manager");
 const tabs = require("tabs");
 const {Helpers} = require("helpers");
-const {CookieMonster} = require("cookie_monster");
 
 // We need the window manager to create the window session model.
-let tm, wm = new WindowManager();
+let tm, wm;
+
 
 exports.setup = function() {
-    tm = new TabManager({
-      cookieManager: new CookieMonster
-    });
+    wm = new WindowManager();
+    tm = new TabManager();
+};
+
+exports.teardown = function() {
+    tm.teardown();
+    wm.teardown();
+
+    tm = wm = null;
 };
 
 exports["can create"] = function(test) {
@@ -37,7 +43,7 @@ exports["new tabs get a session"] = function(test) {
 
       test.done();
   });
-  tabs.open("http://www.mozilla.com");
+  tabs.open("http://www.shanetomlinson.com/static/");
   test.waitUntilDone();
 };
 

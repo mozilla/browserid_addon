@@ -120,28 +120,3 @@ exports['loadStylesheet with document'] = function(test) {
     test.assertEqual(false, getDocumentCalled, 'getDocument was not called when passed a document');
 }
 
-exports['workers.prepare makes it so listeners are automatically removed'] = function(test) {
-    var detach, listener, remove;
-    var worker = {
-        once: function(message, func) {detach = func},
-        port: {
-            on: function(message, func) {
-                listener = func;
-            },
-            removeListener: function(message, func) {
-                remove = func;
-            }
-        }
-    };
-
-    Helpers.workers.prepare(worker);
-
-    let callback = function(){};
-    worker.port.on("message", callback);
-
-    test.assertEqual(listener, callback, 'our callback has been registered');
-
-    detach();
-    test.assertEqual(remove, callback, 'we removed our registered function');
-};
-

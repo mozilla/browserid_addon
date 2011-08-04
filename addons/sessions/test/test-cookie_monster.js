@@ -8,6 +8,10 @@ exports.setup = function() {
     monster = new CookieMonster();
 };
 
+exports.teardown = function() {
+    monster.teardown();
+};
+
 exports["can create"] = function(test) {
     test.assertEqual(true, monster instanceof CookieMonster, "we have a monster on our hands");
 };

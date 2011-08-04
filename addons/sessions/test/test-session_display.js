@@ -4,12 +4,16 @@ const {Helpers} = require("helpers");
 const {Session} = require("session");
 const {CookieMonster} = require("cookie_monster");
 
-let widget, session = new Session({
-  host: "www.mozilla.com",
-  cookieManager: new CookieMonster()
-});
+let widget, cm, session;
 
 exports.setup = function() {
+    cm = new CookieMonster();
+
+    session = new Session({
+      host: "www.mozilla.com",
+      cookieManager: cm
+    });
+
     let doc = Helpers.chrome.getDocument();
     widget = SessionDisplay({
         document: doc,
@@ -20,7 +24,10 @@ exports.setup = function() {
 
 exports.teardown = function() {
     widget.teardown();
-    widget = null;
+    session.teardown();
+    cm.teardown();
+
+    cm = session = widget = null;
 };
 
 exports["test creatable"] = function(test) {
