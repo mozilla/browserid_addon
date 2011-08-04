@@ -63,20 +63,6 @@ function onTrack(window) {
      // get a BrowserWindow.  in onWindowOpen, we get a
      // BrowserWindow to attach our session to.
      this.windowSession = windowSession;
-     this.window = window;
-
-     let me=this;
-     window.gBrowser.addProgressListener({
-         onLocationChange: function(window, progress, request, location) {
-            //let nav = progress.DOMWindow.navigator;
-            //Helpers.toConsole(progress.DOMWindow);
-            console.log("location change: " + location.host);
-            //if(nav.id) {
-              me._emit("currentTabLoad", window.__jpWindow, location.host);
-            //}
-         }.bind(null, window)
-     });
-    
 }
 
 function onUntrack(window) {
@@ -84,7 +70,6 @@ function onUntrack(window) {
 
 function onWindowOpen(browserWindow) {
     let windowSession = this.windowSession;
-    this.window.__jpWindow = browserWindow;
 
     browserWindow.__defineGetter__('session', function() {
         return windowSession.session;
