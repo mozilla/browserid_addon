@@ -21,7 +21,7 @@ Bug reports can be filed using the "Issues" in GitHub under the browserid_addon 
 
 ##Known Problems:
 * Caching when going through history is disabled.  Page must be re-rendered.
-* Only the second window will have status if opening 2 firefox instances at start.
+* When opening multiple Firefox windows at once, only the last instance will have status.
 * Must restart Firefox for status to appear in currently opened tabs.
 
 
