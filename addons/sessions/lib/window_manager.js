@@ -9,6 +9,7 @@ const {Session} = require("session");
 const {SessionDisplay} = require("session_display");
 const {SessionPanel} = require("session_panel");
 const {WindowSession} = require("window_session");
+const unload = require("unload");
 
 let WindowManager = EventEmitter.compose({
     constructor: function() {
@@ -17,7 +18,7 @@ let WindowManager = EventEmitter.compose({
             onUntrack: onUntrack.bind(this)
         };
 
-        let tracker = new WindowTracker(delegate);
+        let tracker = this._tracker = new WindowTracker(delegate);
         // Note: I believe this scheme is incorrect if multiple windows
         // open on initial load.  This is because the WindowTracker will
         // call onTrack on all of its windows before any calls to onWindowOpen
@@ -25,15 +26,26 @@ let WindowManager = EventEmitter.compose({
         // array, and when windows.open is triggered, it will use some way
         // to find its index into the array and get the windowSession that
         // it needs
-        windows.on("open", onWindowOpen.bind(this));
+        this._windowOpen = onWindowOpen.bind(this);
+        windows.on("open", this._windowOpen);
         for each(let win in windows) {
             onWindowOpen.call(this, win);
         }
+        
+        unload.ensure(this, "teardown");
+    },
+
+    teardown: function() {
+        if(!this._tracker) return;
+        this._tracker.unload();
+        this._tracker = null;
     }
 });
 
 function onTrack(window) {
      //console.log("onWindowTrack");
+     if(this.unloaded) return;
+
      let doc = window.document;
      try {
          let uri = self.data.url("styles/identity-session.css");
@@ -71,6 +83,8 @@ function onUntrack(window) {
 }
 
 function onWindowOpen(browserWindow) {
+    if(this.unloaded) return;
+
     let windowSession = this.windowSession;
     browserWindow.__defineGetter__('session', function() {
         return windowSession.session;

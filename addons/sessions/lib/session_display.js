@@ -154,7 +154,9 @@ function createUI(document) {
     }
     else {
         let parent = document.getElementById("urlbar");
-        parent.insertBefore(this.box, parent.firstChild);
+        if(parent) {
+            parent.insertBefore(this.box, parent.firstChild);
+        }
     }
 }
 
