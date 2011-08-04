@@ -43,7 +43,7 @@ exports["new tabs get a session"] = function(test) {
 
       test.done();
   });
-  tabs.open("http://www.mozilla.com");
+  tabs.open("http://www.shanetomlinson.com/static/");
   test.waitUntilDone();
 };
 

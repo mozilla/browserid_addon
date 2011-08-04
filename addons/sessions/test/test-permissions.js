@@ -31,7 +31,6 @@ exports.testAllowBlankPage = function(test) {
 
 exports.testAllowMozillaThenReset = function(test) {
     tabs.once("ready", function() {
-        console.log("made it to ready");
         pm.allow("popup");
         let allowed = pm.allowed("popup");
         test.assertEqual(allowed, true, "popups are allowed");
@@ -45,7 +44,8 @@ exports.testAllowMozillaThenReset = function(test) {
         test.done();
     });
 
-    tabs.activeTab.url = "http://www.mozilla.com";
+    // a blank page that has no js nor css errors
+    tabs.activeTab.url = "http://www.shanetomlinson.com/static/";
     test.waitUntilDone();
 }
 
