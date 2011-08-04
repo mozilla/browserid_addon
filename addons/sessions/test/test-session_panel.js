@@ -15,6 +15,12 @@ exports.setup = function() {
     });
 };
 
+exports.teardown = function() {
+    session.teardown();
+    sp.teardown();
+
+    session = sp = null;
+};
 
 exports['we got something'] = function(test) {
     test.assertStrictEqual(!!sp, true, 'we have a panel');
