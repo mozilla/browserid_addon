@@ -3,6 +3,7 @@ const {WindowListener} = require("./window_listener");
 const {Panel} = require("panel");
 const {PageMod} = require("page-mod");
 const {Cc, Ci} = require("chrome");
+const {Helpers} = require("helpers");
 
 exports.main = AuthLoader;
 
@@ -33,7 +34,7 @@ function showPanel(host, worker) {
 }
 
 function createWindowListener() {
-    var windowListener = new WindowListener();
+    let windowListener = new WindowListener();
     windowListener.on("windowopen", onNewWindow);
     windowListener.init();
     return windowListener;
@@ -46,7 +47,7 @@ function onNewWindow(window) {
         contentScriptFile: data.url("injector.js"),
         onAttach: function(worker) {
             worker.port.on("getAssertion", function(payload) {
-                showPanel(payload.location, worker);
+                showPanel(payload.host, worker);
             });
 
         }
@@ -65,10 +66,7 @@ function createShowPanel() {
         height: 370
     });
 
-    let WM = Cc["@mozilla.org/appshell/window-mediator;1"] 
-        .getService(Ci.nsIWindowMediator);
-    let doc = WM.getMostRecentWindow("navigator:browser").document;
-    let el = doc.getElementById("identity-box-inner");
+    let el = Helpers.chrome.getElementById("identity-box-inner");
     panel.show(el);
 
     return panel;

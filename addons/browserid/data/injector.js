@@ -3,7 +3,7 @@
 
     self.port.on("assertionReady", function(payload) {
         if(assertionCallback) {
-            console.log("The assertion is finally ready! " + payload.assertion);
+//            console.log("The assertion is finally ready! " + payload.assertion);
             assertionCallback(payload.assertion);
         }
     });
@@ -13,7 +13,7 @@
     nav.id.getVerifiedEmail = function(callback) {
         assertionCallback = callback;
         self.port.emit("getAssertion", {
-            location: unsafeWindow.location.toString()
+            host: unsafeWindow.location.host
         });
     };
 
