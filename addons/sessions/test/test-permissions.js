@@ -9,6 +9,8 @@ exports.setup = function() {
 };
 
 exports.teardown = function() {
+    // do not tear down the pm here, we need to tear this down asynchronously 
+    // on the last test.
 };
 
 
