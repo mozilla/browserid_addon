@@ -5,15 +5,17 @@ const windows = require("windows").browserWindows;
 const {Helpers} = require("helpers");
 
 let wm, openCallback;
-windows.on("open", function(window) {
+let windowOpenHandler = function(window) {
     if(openCallback) openCallback(window);
-});
+}
 exports.setup = function() {
+    windows.on("open", windowOpenHandler);
     wm = new WindowManager();
     openCallback = undefined;
 };
 
 exports.teardown = function() {
+  windows.removeListener("open", windowOpenHandler);
   wm.teardown();
   wm = null;
 };
