@@ -30,7 +30,7 @@ exports.testAllowBlankPage = function(test) {
 };
 
 exports.testAllowMozillaThenReset = function(test) {
-    tabs.on("ready", function() {
+    tabs.once("ready", function() {
         console.log("made it to ready");
         pm.allow("popup");
         let allowed = pm.allowed("popup");
