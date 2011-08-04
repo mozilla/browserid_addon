@@ -20,30 +20,36 @@ const XUL_NS = "http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul";
 const SVG_NS = "http://www.w3.org/2000/svg";
 const {EventEmitter} = require("events");
 const STATUS_SHOW = ["loggedin","login"];
+const unload = require("unload");
 
 const SessionDisplay = EventEmitter.compose({
     constructor: function(options) {
         let {document, session} = options;
         this.session = session;
+        this.document = document;
       
         createUI.call(this, document);    
         attachSessionEvents.call(this);
         
-        this.identityBox = document.getElementById("identity-box");
-        this.origLeft = this.identityBox.style.paddingLeft;
+        let identityBox = getIdentityBox.call(this);
+        this.origLeft = identityBox && identityBox.style.paddingLeft;
         
         this.hide();
+        unload.ensure(this, 'teardown');
     },
 
     teardown: function() {
-        if(this.box) {
-            this.box.parentNode.removeChild();
+        if (this.box && this.box.parentNode) {
+            this.box.parentNode.removeChild(this.box);
         }
     },
         
     show: function() {
         this.box.show();
-        this.identityBox.style.paddingLeft = "10px";
+        let identityBox = getIdentityBox.call(this);
+        if (identityBox) {
+            identityBox.style.paddingLeft = "10px";
+        }
 
         this._emit("show");
     },
@@ -51,9 +57,14 @@ const SessionDisplay = EventEmitter.compose({
 
     hide: function() {
         this.box.hide();
-        this.identityBox.style.paddingLeft = this.origLeft;
+        let identityBox = getIdentityBox.call(this);
+        if (identityBox) {
+            identityBox.style.paddingLeft = this.origLeft;
+        }
         this._emit("hide");
-    }
+    },
+
+    setStatus: setStatus
 });
 
 exports.SessionDisplay = SessionDisplay;
@@ -137,10 +148,19 @@ function createUI(document) {
       parentNode: this.svg,
     }, SVG_NS);
 
-    let insertBefore = document.getElementById("identity-box");
-    if(insertBefore) {
-        insertBefore.parentNode.insertBefore(this.box, insertBefore);
+    let identityBox = getIdentityBox.call(this);
+    if (identityBox) {
+        identityBox.parentNode.insertBefore(this.box, identityBox);
     }
+    else {
+        let parent = document.getElementById("urlbar");
+        parent.insertBefore(this.box, parent.firstChild);
+    }
+}
+
+function getIdentityBox() {
+    let identityBox = this.document.getElementById("identity-box");
+    return identityBox;
 }
 
 function attachSessionEvents() {
@@ -149,11 +169,11 @@ function attachSessionEvents() {
 
 function onSetSessions(sessions) {
     var status = "none";
-    if(sessions) {
+    if (sessions) {
         let email = getActiveEmail.call(this);
 
         status = "login";
-        if(email) {
+        if (email) {
             this.userInfo.setAttribute("value", email);
             status = "loggedin";
         }
@@ -169,7 +189,7 @@ function getActiveEmail() {
 }
 
 function setStatus(status) {
-    switch(status) {
+    switch (status) {
         case "login":
             this.signIn.show();
             this.userInfo.hide();
@@ -201,12 +221,12 @@ function createNode(document, nodeName, attribs, ns) {
         node.collapsed = node.hidden = true;
      };
 
-     for(let attrib in attribs) {
+     for (let attrib in attribs) {
          let val = attribs[attrib];
-         if(NODE_SPECIAL.indexOf(attrib) === -1) {
+         if (NODE_SPECIAL.indexOf(attrib) === -1) {
             node.setAttribute(attrib, val);
          }
-         else if(attrib === "parentNode") {
+         else if (attrib === "parentNode") {
              val.appendChild(node);
          }
      }

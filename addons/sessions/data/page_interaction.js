@@ -47,7 +47,6 @@
     }
 
     function broadcastSessions() {
-//        console.log("broadcastingSessions");
         self.port.emit("sessions.set", {
             sessions: sessions,
             host: unsafeWindow.document.location.host

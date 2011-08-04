@@ -36,11 +36,13 @@ let pageMod = PageMod({
 
 
 function onSessionSet(data) {
+    this.tab.worker = this;
     tabManager.sessionUpdate(this.tab, data);
 }
 
 
 function onSessionTabOpen(data) {
+    this.tab.worker = this;
     tabManager.sessionReset(this.tab, data);
 };
 
