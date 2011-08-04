@@ -4,6 +4,7 @@ const {Panel} = require("panel");
 const {PageMod} = require("page-mod");
 const {Cc, Ci} = require("chrome");
 const {Helpers} = require("helpers");
+const tabs = require("tabs");
 
 exports.main = AuthLoader;
 
@@ -31,6 +32,9 @@ function showPanel(host, worker) {
         panel = null;
     }
 
+    tabs.once("activate", function() {
+        emitAndHide("assertionFailure", { reason: "new tab" });
+    });
 
     return panel;
 }
