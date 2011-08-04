@@ -1,12 +1,18 @@
 const {Cc, Ci, components} = require("chrome");
 const obSvc = require("observer-service");
+const unload = require("unload");
 
 const CookieMonster = function() {
     this.handlers = {};
     obSvc.add("cookie-changed", onCookieChange, this);
+    unload.ensure(this, "teardown");
 };
 
 CookieMonster.prototype = {
+    teardown: function() {
+        obSvc.remove("cookie-changed", onCookieChange, this);
+        this.handlers = null;
+    },
     watch: function(host, name, callback) {
         var handlers = this.getHandlers(host, name);
         handlers.push(callback);
