@@ -20,13 +20,13 @@ self.port.on("getVerifiedEmail", function(payload) {
 });
 
 unsafeWindow.onGetAssertionSuccess = function(assertion) {
-    console.log("getVerifiedEmail assertion: " + assertion);
+    //console.log("getVerifiedEmail assertion: " + assertion);
     self.port.emit("assertionReady", {
         assertion: assertion
     });
 }
 
 unsafeWindow.onGetAssertionFailure = function() {
-    console.log("failure getting verified email");
+    //console.log("failure getting verified email");
 }
 
