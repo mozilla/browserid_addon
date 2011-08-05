@@ -1,6 +1,4 @@
-There are currently two addons in this repository, both are found in addons.
+This addon is made of two components, the BrowserID and a Sessions API parts.  Both are found under addon.
 
-addons/
-      browserid/         - BrowserID addon - bring BrowserID login into the browser.
-      sessions/          - Implement the experimental Sessions API.         
+Under each directory in addon, there are two subdirectories, browserid and sessions
 

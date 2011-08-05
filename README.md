@@ -17,7 +17,8 @@ bar for all of their session related needs.  When visiting a supporting site,
 a small box to the left of the URL bar will allow a user to login, logout, and
 view their session information.
 
-Code for this is found in addons/sessions
+## Where to run
+The `addon` directory.
 
 ## Developer Info:
 
@@ -32,7 +33,7 @@ Code for this is found in addons/sessions
 * https://wiki.mozilla.org/Identity/Verified_Email_Protocol
 
 Primary Developer:
-Shane Tomlinson - stomlinson@mozilla.com, @shane_tomlinson
+Shane Tomlinson - stomlinson@mozilla.com, @shane_tomlinson, http://www.shanetomlinson.com
 
 
 ## License Info:
