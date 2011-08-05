@@ -40,20 +40,24 @@ exports.MainBrowserID = function() {
 
       panel.port.on("assertionReady", emitAndHide.bind(null, "assertionReady"));
       panel.port.on("assertionFailure", emitAndHide.bind(null, "assertionFailure"));
+      panel.once("hide", emitAndHide.bind(null, "assertionFailure", { reason: "close panel" }));
+      tabs.once("activate", emitAndHide.bind(null, "assertionFailure", { reason: "new tab" }));
 
       let el = Helpers.chrome.getElementById("identity-box-inner");
       panel.show(el);
 
+      let complete = false;
       function emitAndHide(message, payload) {
-          worker.port.emit(message, payload);
-          panel.hide();
-          panel.destroy();
-          panel = null;
+          // Only do this if we haven't already completed.  Otherwise, the flow has 
+          // already completed and we are incorrectly overriding the old state.
+          if (!complete) {
+              complete = true;
+              worker.port.emit(message, payload);
+              panel.hide();
+              panel.destroy();
+              panel = null;
+          }
       }
-
-      tabs.once("activate", function() {
-          emitAndHide("assertionFailure", { reason: "new tab" });
-      });
 
       return panel;
   }
