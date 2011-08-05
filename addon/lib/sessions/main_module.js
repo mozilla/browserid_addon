@@ -26,10 +26,15 @@ exports.MainSession = function() {
       contentScriptWhen: "start",
       contentScriptFile: data.url("sessions/page_interaction.js"),
       onAttach: function(worker) {
-          worker.tab.worker = worker;
-          worker.port.on("sessions.set", onSessionSet.bind(worker));
-          worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
-          worker.port.on("sessions.tabready", onSessionTabReady.bind(worker));
+          // only do this if we are in a tab - jetpack panels cause
+          // a worker to be created as well, but we don't want to bind
+          // to them.
+          if(worker.tab) {
+              worker.tab.worker = worker;
+              worker.port.on("sessions.set", onSessionSet.bind(worker));
+              worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
+              worker.port.on("sessions.tabready", onSessionTabReady.bind(worker));
+          }
       }
   });
 
