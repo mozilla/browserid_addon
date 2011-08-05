@@ -1,7 +1,6 @@
 "use strict";
 const {data} = require("self");
 const {PageMod} = require("page-mod");
-const {Fakers} = require("./fakers");
 const {Helpers} = require("helpers");
 const {WindowManager} = require("sessions/window_manager");
 const {TabManager} = require("sessions/tab_manager");
@@ -9,8 +8,6 @@ const tabs = require("tabs");
 const timers = require("timers");
 
 exports.MainSession = function() {
-  Fakers();
-
   let windowManager = new WindowManager();
   windowManager.on("login", emitEvent.bind(null, "emitevent.login"));
   windowManager.on("logout", emitEvent.bind(null, "emitevent.logout"));
