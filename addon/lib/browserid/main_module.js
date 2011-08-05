@@ -44,8 +44,6 @@ exports.MainBrowserID = function() {
       let el = Helpers.chrome.getElementById("identity-box-inner");
       panel.show(el);
 
-      console.log("showing panel");
-
       function emitAndHide(message, payload) {
           worker.port.emit(message, payload);
           panel.hide();
