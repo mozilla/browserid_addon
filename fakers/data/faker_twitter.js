@@ -30,7 +30,9 @@
         }
     }
 
-    unsafeWindow.navigator.id.sessions = sessions;
+    let nav = unsafeWindow.navigator;
+    nav.id = nav.id || {};
+    nav.id.sessions = nav.id.sessions || sessions;
 
     doc.addEventListener("login", function(event) {
         doc.location.href = "https://www.twitter.com/login";
