@@ -6,11 +6,8 @@ nav.id.channel = nav.id.channel || {};
 
 let browseridController;
 
-console.log("adding controller: " + unsafeWindow.document.location.host);
-
 nav.id.channel.registerController = function(controller) {
     browseridController = controller;    
-    console.log("registering controller");
     self.port.emit("controllerReady");
 };
 
