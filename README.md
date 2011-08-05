@@ -33,7 +33,7 @@ The `addon` directory.
 * https://wiki.mozilla.org/Identity/Verified_Email_Protocol
 
 Primary Developer:
-Shane Tomlinson - stomlinson@mozilla.com, @shane_tomlinson
+Shane Tomlinson - stomlinson@mozilla.com, @shane_tomlinson, http://www.shanetomlinson.com
 
 
 ## License Info:

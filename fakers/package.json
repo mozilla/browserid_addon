@@ -1,0 +1,9 @@
+{
+    "name": "fakers",
+    "license": "MPL 1.1/GPL 2.0/LGPL 2.1",
+    "author": "",
+    "version": "0.1",
+    "fullName": "fakers",
+    "id": "sessions_fakers_addon@mozillalabs.com",
+    "description": "Fakes the Sessions API Implementation for some common sites"
+}

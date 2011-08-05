@@ -33,7 +33,9 @@
         }
     }
 
-    unsafeWindow.navigator.id.sessions = sessions;
+    let nav = unsafeWindow.navigator;
+    nav.id = nav.id || {};
+    nav.id.sessions = nav.id.sessions || sessions;
 
     doc.addEventListener("login", function(event) {
         doc.location.href = "http://en.wikipedia.org/w/index.php?title=Special:UserLogin&returnto=Main_Page&campaign=ACP1";
