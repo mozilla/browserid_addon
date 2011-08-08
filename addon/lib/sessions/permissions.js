@@ -23,7 +23,7 @@ Permissions.prototype = {
     },
 
     allow: function(name, tab) {
-        let uri = getURIForTab(tab);
+        let uri = getURI(tab);
         if (uri) {
             savePermission.call(this, name);
             if (!this.allowed(name)) {
@@ -33,7 +33,7 @@ Permissions.prototype = {
     },
 
     allowed: function(name, tab) {
-        let uri = getURIForTab(tab),
+        let uri = getURI(tab),
             allowed = false;
 
         if (uri) {
@@ -46,7 +46,7 @@ Permissions.prototype = {
 
     reset: function(name, tab) { 
         tab = tab || tabs.activeTab;
-        let uri = getURIForTab(tab);
+        let uri = getURI(tab);
         if (uri) {
             removePermission.call(this, name, tab);
         }
@@ -55,9 +55,9 @@ Permissions.prototype = {
 
 
 function savePermission(name, tab) {
-    let uri = getURIForTab(tab);
+    let uri = getURI(tab);
     if (uri) {
-        let permName = getTabPermName(name, tab);
+        let permName = getPermName(name, tab);
         if (!(permName in this.origPerms)) {
             this.origPerms[permName] = {
               perm: perms.testPermission(uri, name),
@@ -68,29 +68,28 @@ function savePermission(name, tab) {
 }
 
 function removePermission(name, tab) {
-    let permName = getTabPermName(name, tab);
+    let permName = getPermName(name, tab);
     if (permName in this.origPerms) {
         let currPerm = this.origPerms[permName].perm;
-        let url = tab.url.replace("http:\/\/","");
-        url = url.split("/")[0];
+        let url = tab.url.replace("http:\/\/","").split("/")[0];
 
-        if(currPerm === perms.UNKNOWN_ACTION) {
-            perms.remove(url, name);
-        } else if(currPerm) {
-            perms.add(url, name, currPerm);
+        perms.remove(url, name);
+        if(currPerm !== perms.UNKNOWN_ACTION) {
+            let uri = getURI(tab);
+            perms.add(uri, name, currPerm);
         }
 
         delete this.origPerms[permName];
     }
 }
 
-function getTabPermName(name, tab) {
+function getPermName(name, tab) {
     tab = tab || tabs.activeTab;
     let permName = tab.url + ":" + name;
     return permName;
 }
 
-function getURIForTab(tab) {
+function getURI(tab) {
     tab = tab || tabs.activeTab;
     let uri;
 
