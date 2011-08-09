@@ -22,8 +22,8 @@ exports.setup = function() {
 };
 
 exports.teardown = function() {
-  cookieManager.teardown();
   bindings.teardown();
+  cookieManager.teardown();
 };
 
 
@@ -45,17 +45,17 @@ exports["can remove a binding"] = function(test) {
   let callback = function(binding) {
     test.pass("we have removal");
 
+    let getVal = bindings.get("labs.mozilla.com");
+    test.assertUndefined(getVal, "Empty collection, no bindings");
+
     bindings.removeListener("remove", callback);
     test.done();  
   };
 
   bindings.on("remove", callback);
   bindings.remove("labs.mozilla.com");
-  let getVal = bindings.get("labs.mozilla.com");
-  test.assertUndefined(getVal, "Empty collection, no bindings");
 
   test.waitUntilDone();
-
 };
 
 
