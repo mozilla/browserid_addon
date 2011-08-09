@@ -44,8 +44,8 @@ let Bindings = EventEmitter.compose({
       this._bindings[host] = null;
       delete this._bindings[host];
       this.length--;
-      this._emit("remove", binding);
       this._cookieManager.unwatch(host, binding.bound_to.name, binding.remove);
+      this._emit("remove", binding);
     }
 
     return binding;
