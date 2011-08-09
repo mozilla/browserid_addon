@@ -5,7 +5,6 @@ const {Helpers} = require("helpers");
 const {WindowManager} = require("sessions/window_manager");
 const {TabManager} = require("sessions/tab_manager");
 const tabs = require("tabs");
-const timers = require("timers");
 
 exports.MainSession = function() {
   let windowManager = new WindowManager();
