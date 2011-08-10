@@ -6,7 +6,7 @@ const {WindowManager} = require("sessions/window_manager");
 const {TabManager} = require("sessions/tab_manager");
 const tabs = require("tabs");
 const {Permissions} = require("sessions/permissions");
-const timers = require("timers");
+const timer = require("timer");
 
 exports.MainSession = function() {
   let pm = new Permissions();
@@ -56,7 +56,7 @@ exports.MainSession = function() {
       if (tab) {
           pm.allow("popup");
           tab.worker.port.emit(eventName);
-          timers.setTimeout(function() {
+          timer.setTimeout(function() {
               pm.reset("popup", tab);
           }, 500);
       }
