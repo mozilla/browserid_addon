@@ -12,7 +12,16 @@
     function onSessionsSet(sessions) {
         onSessionsClear();
         if(sessions && sessions.length) {
-            username.innerHTML = sessions[0].email;
+            // remove all previous children
+            while(username.childNodes.length) {
+              var child = username.childNodes[0];
+              username.removeChild(child);
+            }
+
+            // create and append new name.
+            var email = sessions[0].email || '';
+            var newName = document.createTextNode(email);
+            username.appendChild(newName);
             self.port.emit("sessions.setheight", body.clientHeight);
         }
     }

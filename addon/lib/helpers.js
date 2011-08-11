@@ -22,19 +22,19 @@ const Helpers = {
             return window.document;
         },
 
-        getElementById: function(id, document) {
-            document = document || Helpers.chrome.getDocument();                                       
-            let el = document.getElementById(id);
+        getElementById: function(id, doc) {
+            doc = doc || Helpers.chrome.getDocument();                                       
+            let el = doc.getElementById(id);
             return el;
         },
 
 
-        simulateDOMEvent: function(el, evtClass, type, document) {
-            document = document || Helpers.chrome.getDocument();                    
-            let evt = document.createEvent(evtClass);
+        simulateDOMEvent: function(el, evtClass, type, doc) {
+            doc = doc || Helpers.chrome.getDocument();                    
+            let evt = doc.createEvent(evtClass);
 
             if(evtClass === "MouseEvents") {
-                evt.initMouseEvent(type, true, true, document.defaultView,
+                evt.initMouseEvent(type, true, true, doc.defaultView,
                         0, 0, 0, 0, 0, false, false, false, false, 0, null);
             }
 
