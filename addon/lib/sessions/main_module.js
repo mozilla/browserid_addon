@@ -5,9 +5,11 @@ const {Helpers} = require("helpers");
 const {WindowManager} = require("sessions/window_manager");
 const {TabManager} = require("sessions/tab_manager");
 const tabs = require("tabs");
-const timers = require("timers");
+const {Permissions} = require("sessions/permissions");
+const timer = require("timer");
 
 exports.MainSession = function() {
+  let pm = new Permissions();
   let windowManager = new WindowManager();
   windowManager.on("login", emitEvent.bind(null, "emitevent.login"));
   windowManager.on("logout", emitEvent.bind(null, "emitevent.logout"));
@@ -23,7 +25,7 @@ exports.MainSession = function() {
           // only do this if we are in a tab - jetpack panels cause
           // a worker to be created as well, but we don't want to bind
           // to them.
-          if(worker.tab) {
+          if (worker.tab) {
               worker.tab.worker = worker;
               worker.port.on("sessions.set", onSessionSet.bind(worker));
               worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
@@ -51,8 +53,12 @@ exports.MainSession = function() {
 
   function emitEvent(eventName) {
       let tab = tabs.activeTab;
-      if(tab) {
+      if (tab) {
+          pm.allow("popup");
           tab.worker.port.emit(eventName);
+          timer.setTimeout(function() {
+              pm.reset("popup", tab);
+          }, 500);
       }
   };
 
