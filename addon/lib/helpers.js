@@ -17,9 +17,9 @@ const Helpers = {
             return win;
         },
         
-        getDocument: function(window) {
-            window = window || Helpers.chrome.getMostRecentWindow();
-            return window.document;
+        getDocument: function(win) {
+            win = win || Helpers.chrome.getMostRecentWindow();
+            return win.document;
         },
 
         getElementById: function(id, doc) {
@@ -43,11 +43,12 @@ const Helpers = {
             return evt;
         },
 
-        loadStylesheet: function(uri, document) {
-            document = document || Helpers.chrome.getDocument();
-            let pi = document.createProcessingInstruction(
+        loadStylesheet: function(uri, doc) {
+            doc = doc || Helpers.chrome.getDocument();
+            let pi = doc.createProcessingInstruction(
                    "xml-stylesheet", "href=\"" + uri + "\" type=\"text/css\"");
-                document.insertBefore(pi, document.firstChild);
+
+            doc.insertBefore(pi, doc.firstChild);
             return pi;
         }
     }
