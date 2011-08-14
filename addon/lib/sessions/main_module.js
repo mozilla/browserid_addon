@@ -63,7 +63,6 @@ exports.MainSession = function() {
            * contents.
            */
           if (worker.tab) {
-              worker.tab.worker = worker;
               worker.port.on("sessions.set", onSessionSet.bind(worker));
               worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
               worker.port.on("sessions.tabready", onSessionTabReady.bind(worker));
@@ -95,6 +94,7 @@ exports.MainSession = function() {
    * remove it if there is no session data.
    */
   function onSessionTabReady() {
+      this.tab.worker = this;
       tabManager.tabReady(this.tab);
   };
 
