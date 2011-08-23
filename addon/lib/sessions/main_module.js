@@ -61,6 +61,13 @@ exports.MainSession = function() {
            * sessions.tabready means that the tab's contents are fully ready 
            * and that we should either remove the session display or update its 
            * contents.
+           *
+           * We have to keep track of which worker to respond to for a tab.  
+           * Since a page can have multiple iframes, some of those iframes 
+           * coming after the initial session information is set, we only 
+           * set the tab's worker to be the worker that we receive messages 
+           * from.  We do this whenever we get a response for any of the 
+           * messages below.
            */
           if (worker.tab) {
               worker.port.on("sessions.set", onSessionSet.bind(worker));
