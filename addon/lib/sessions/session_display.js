@@ -75,6 +75,12 @@ const SessionDisplay = EventEmitter.compose({
 exports.SessionDisplay = SessionDisplay;
 
 function createUI(document) {
+    let identityBox = getIdentityBox.call(this);
+    let identityStyle = (identityBox && document.defaultView.getComputedStyle(identityBox)) || {}; 
+    let marginTop = identityStyle.marginTop;
+    let marginBottom = identityStyle.marginBottom;
+    let marginLeft = identityStyle.marginLeft;
+
     this.box = createNode(document, "box", {
         id: "identity-session-box"
     });
@@ -86,13 +92,23 @@ function createUI(document) {
     this.signIn = createNode(document, "label", {
         id: "identity-session-signin",
         value: "Sign in",
-        parentNode: this.box
+        parentNode: this.box,
+        style: {
+          marginTop: marginTop,
+          marginBottom: marginBottom,
+          marginLeft: marginLeft
+        }
     });
 
     this.userInfo = createNode(document, "label", {
         id: "identity-session-userinfo",
         value: "",
-        parentNode: this.box
+        parentNode: this.box,
+        style: {
+          marginTop: marginTop,
+          marginBottom: marginBottom,
+          marginLeft: marginLeft
+        }
     });
 
     this.svg = createNode(document, "svg", {
@@ -153,7 +169,6 @@ function createUI(document) {
       parentNode: this.svg,
     }, SVG_NS);
 
-    let identityBox = getIdentityBox.call(this);
     if (identityBox) {
         identityBox.parentNode.insertBefore(this.box, identityBox);
     }
@@ -216,7 +231,7 @@ function setStatus(status) {
 }
 
 
-const NODE_SPECIAL = ["parentNode"];
+const NODE_SPECIAL = ["parentNode", "style"];
 function createNode(document, nodeName, attribs, ns) {
      let node = document.createElementNS(ns || XUL_NS, nodeName);
 
@@ -233,12 +248,23 @@ function createNode(document, nodeName, attribs, ns) {
          if (NODE_SPECIAL.indexOf(attrib) === -1) {
             node.setAttribute(attrib, val);
          }
+         else if (attrib === "style") {
+            setNodeStyle(node, val);
+         }
          else if (attrib === "parentNode") {
              val.appendChild(node);
          }
      }
 
      return node;
+}
+
+function setNodeStyle(node, attribs) {
+  for (let attrib in attribs) {
+    if ("undefined" !== typeof attribs[attrib]) {
+      node.style[attrib] = attribs[attrib];
+    }
+  }
 }
 
 
