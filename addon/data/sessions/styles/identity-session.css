@@ -6,8 +6,8 @@
 }
 
 #identity-session-signin, #identity-session-userinfo {
-    margin: 1px -1px 1px 1px;
-    padding: 0 5px;
+    margin: 0 -1px 0 0;
+    padding: 1px 5px;
     border: 1px solid #555;
     border-radius: 2px 0 0 2px;
     border-color: #ccc;
