@@ -43,7 +43,7 @@ exports["can unwatch"] = function(test) {
 exports["changes with cookie"] = function(test) {
     var success=false;
 
-    monster.watch("Mozilla", "monster", function(value) {
+    monster.watch("mozilla", "monster", function(value) {
         success = true;
     });
 
@@ -52,7 +52,7 @@ exports["changes with cookie"] = function(test) {
         QueryInterface:function() {
             return {
                 name: 'monster',
-                host: 'Mozilla'
+                host: 'mozilla'
             };
         }
     }, "added");
@@ -71,13 +71,15 @@ exports["clear clears bindings"] = function(test) {
     test.pass();
 };
 
-function createCookie(name,value,days) {
-    if (days) {
-        var date = new Date();
-        date.setTime(date.getTime()+(days*24*60*60*1000));
-        var expires = "; expires="+date.toGMTString();
-    }
-    else var expires = "";
-    var cookie = name+"="+value+expires+"; path=/";
-    return cookie;
-}
+exports["batch cookie delete causes no problems"] = function(test) {
+  monster.watch("mozilla", "test-cookie", function(value) {
+  });
+  // XXX Figure this out, using the obersverService perhaps?
+};
+
+exports["clear cookies"] = function(test) {
+  monster.watch("mozilla", "test-cookie", function(value) {
+  });
+  // XXX Figure this out, using the obersverService perhaps?
+};
+
