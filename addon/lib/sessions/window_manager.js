@@ -37,7 +37,6 @@ let WindowManager = EventEmitter.compose({
         for each(let win in windows) {
             onWindowOpen.call(this, win);
         }
-        
         unload.ensure(this, "teardown");
     },
 
@@ -119,7 +118,7 @@ function onUntrack(win) {
 // of the Jetpack code, we have to somehow associate the session information
 // we created above in the window tracker (which uses native window objects)
 // to the wrapped Jetpack object.  This is a big pain.
-function onWindowOpen(win) {
+function onWindowOpen(browserWindow) {
     if(this.unloaded) return;
 
     let windowSession = this.windowSession;
@@ -128,14 +127,14 @@ function onWindowOpen(win) {
     // is passed from Jetpack code.  Since the same BrowserWindow object is 
     // used whenever this particular window is accessed, our session info is 
     // persisted and can be accessed from other scripts.
-    win.__defineGetter__('session', function() {
+    browserWindow.__defineGetter__('session', function() {
         return windowSession.session;
     });
 
     // Whenever the current window's session information is updated, we have to 
     // update the current window's session model.  This happens whenever a new 
     // tab is focused or whenever the current tab's session info is updated.
-    win.__defineSetter__('session', function(session) {
+    browserWindow.__defineSetter__('session', function(session) {
         windowSession.session = session; 
     });
 }
