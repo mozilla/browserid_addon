@@ -70,6 +70,8 @@ function createTabSession(tab) {
           host: tab.url
         });
 
+        // We define 2 getters, one for the entire session model, one for just 
+        // the sessions.  We
         tab.__defineGetter__('session', function() { return model; });
         tab.__defineGetter__('sessions', function() { return model.sessions; });
         tab.__defineSetter__('sessions', function(sessions) { model.sessions = sessions; });
