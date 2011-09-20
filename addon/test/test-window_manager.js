@@ -3,6 +3,8 @@ const {WindowManager} = require("sessions/window_manager");
 const {WindowTracker} = require("window-utils");
 const windows = require("windows").browserWindows;
 const {Helpers} = require("helpers");
+const self = require("self");
+const stylesheetURI = self.data.url("sessions/styles/identity-sessions.css");
 
 let wm, openCallback;
 let windowOpenHandler = function(window) {
@@ -25,19 +27,25 @@ exports['we create it'] = function(test) {
 };
 
 exports['each initially open window has a session'] = function(test) {
-  let success = true;
-  for each(let window in windows) {
-      success = success && !!window.session;
-  }
+  for each(let win in windows) {
+      let success = !!win.session;
+      test.assertStrictEqual(success, true, "all wins have a session");
 
-  test.assertStrictEqual(success, true, "all windows have a session");
+      /*console.log("looking for stylesheet: " + stylesheetURI);
+      let hasStylesheet = Helpers.chrome.stylesheetExists(stylesheetURI, win.document);
+      test.assertEqual(hasStylesheet, true, "win has stylesheet");
+    */
+  }
 };
-/*
-exports['when opening a window, we get a session'] = function(test) {
+
+exports['when opening a window, we get a session, stylesheet'] = function(test) {
     let success = false;
 
-    openCallback = function(window) {
-        test.assertEqual(!!window.session, true, "a session is put on the browser window");
+    openCallback = function(win) {
+        test.assertEqual(!!win.session, true, "a session is put on the browser win");
+        /*let hasStylesheet = Helpers.chrome.stylesheetExists(stylesheetURI, win.document);
+        test.assertEqual(hasStylesheet, true, "window has stylesheet");
+        */
         test.done();
     };
 
@@ -45,7 +53,7 @@ exports['when opening a window, we get a session'] = function(test) {
     test.waitUntilDone();
 };
 
-exports["when clicking login, login event is triggered"] = function(test) {
+/*exports["when clicking login, login event is triggered"] = function(test) {
     let window;
     wm.on("login", function(activeWindow) {
         window = activeWindow;
@@ -54,4 +62,5 @@ exports["when clicking login, login event is triggered"] = function(test) {
     let el = Helpers.chrome.getElementById("identity-session-signin");
     Helpers.chrome.simulateDOMEvent(el, "MouseEvents", "click");
     test.assertStrictEqual(!!window, true, "login was triggered, we have a window"); 
-};*/
+};
+*/
