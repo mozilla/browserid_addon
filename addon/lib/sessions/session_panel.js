@@ -4,6 +4,8 @@ const {Panel} = require("panel");
 const {Helpers} = require("../helpers");
 const unload = require("unload");
 
+// TODO - do not pass the document to this, instead in show, pass the document 
+// the panel should be shown in.
 let SessionPanel = EventEmitter.compose({
     constructor: function(config) {
         let panel = this._panel = Panel({
