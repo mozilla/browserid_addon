@@ -21,9 +21,11 @@ self.port.on("getVerifiedEmail", function(payload) {
 });
 
 function onGetAssertionSuccess(assertion) {
-    emit("assertionReady", {
-        assertion: assertion
-    });
+    if (assertion) {
+        emit("assertionReady", {
+            assertion: assertion
+        });
+    }
 }
 
 function onGetAssertionFailure(reason) {
