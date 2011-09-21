@@ -39,6 +39,27 @@ exports["adds elements"] = function(test) {
     test.assertEqual(true, !!box, "box has been added");
 };
 
+exports["margins of signin/username boxes have the same margins as the identity box"] = function(test) {
+    let win = Helpers.chrome.getMostRecentWindow();
+    let box = Helpers.chrome.getElementById("identity-box");
+    let boxStyle = win.getComputedStyle(box);
+
+    let signIn = Helpers.chrome.getElementById("identity-session-signin");
+    let signInStyle = win.getComputedStyle(signIn);
+
+    test.assertEqual(boxStyle.marginTop, signInStyle.marginTop); 
+    test.assertEqual(boxStyle.marginBottom, signInStyle.marginBottom); 
+    test.assertEqual(boxStyle.marginLeft, signInStyle.marginLeft); 
+
+    let userInfo = Helpers.chrome.getElementById("identity-session-userinfo");
+    let userInfoStyle = win.getComputedStyle(userInfo);
+
+    test.assertEqual(boxStyle.marginTop, userInfoStyle.marginTop); 
+    test.assertEqual(boxStyle.marginBottom, userInfoStyle.marginBottom); 
+    test.assertEqual(boxStyle.marginLeft, userInfoStyle.marginLeft); 
+
+};
+
 exports["Event issued whenever we click anywhere on the identity-session-box"] = function(test) {
     testClick("identity-session-signin");
     testClick("identity-session-arrow");
@@ -157,5 +178,4 @@ exports["on teardown, there are no buttons"] = function(test) {
     let statusBox = doc.getElementById("identity-session-box");
     test.assertStrictEqual(null, statusBox, "after teardown there is no box");
 };
-
 

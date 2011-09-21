@@ -1,5 +1,17 @@
 "use strict";
 
+/**
+ * The Bindings module keeps track of the current list of bindings.
+ * A binding is a session that persists across page views and across multiple 
+ * tabs.  A binding is a session that is bound to a particular host (exact 
+ * match hostname) using the current value of a cookie.  A binding is valid 
+ * as long as the cookie value does not change.  As soon as the cookie changes, 
+ * the binding is considered invalid and removed from the list.  There can be 
+ * at most one binding per host, so if a new binding is added for a host that 
+ * is already in the list, the old binding is removed.  This could probably be 
+ * simplified using the JetPack Collection.
+ */
+ 
 const {EventEmitter} = require("events");
 const unload = require("unload");
 
