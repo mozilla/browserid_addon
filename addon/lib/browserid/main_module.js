@@ -71,8 +71,8 @@ exports.MainBrowserID = function() {
           ],
           contentScriptWhen: "start",
           allow: { script: true },
-          width: 540,
-          height: 370
+          width: 700,
+          height: 375
       });
 
 
