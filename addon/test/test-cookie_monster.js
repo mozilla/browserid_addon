@@ -43,7 +43,7 @@ exports["can unwatch"] = function(test) {
 exports["changes with cookie"] = function(test) {
     var success=false;
 
-    monster.watch("Mozilla", "monster", function(value) {
+    monster.watch("mozilla", "monster", function(value) {
         success = true;
     });
 
@@ -52,7 +52,7 @@ exports["changes with cookie"] = function(test) {
         QueryInterface:function() {
             return {
                 name: 'monster',
-                host: 'Mozilla'
+                host: 'mozilla'
             };
         }
     }, "added");
