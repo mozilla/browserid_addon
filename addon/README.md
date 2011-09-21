@@ -8,12 +8,11 @@ and check current status.
 
 ##To Run:
 1. Get the addon-sdk at https://github.com/mozilla/addon-sdk/
-2. Start up the addon-sdk environment by cd into the addon-sdk, then 'source 
-   bin/activate'.
-3. From the addon directory, type cfx run.
-4. Go to myfavoritebeer.org to see BrowserID in action!
-5. Go to google.com, wikipedia.org, twitter.com or myfavoritebeer.com to see 
-   the sessions.
+2. Start up the addon-sdk environment by cd into the addon-sdk, then `source 
+   bin/activate`.
+3. cd out of the addon-sdk and into the `addon` directory of this repo.
+3. type `cfx run`.
+4. Go to myfavoritebeer.org to see both BrowserID and the sessions in action!
 
 ##Running Tests:
 Basic tests are found in the test directory. These can be run using 'cfx test'.
