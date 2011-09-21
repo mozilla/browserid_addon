@@ -71,15 +71,70 @@ exports["clear clears bindings"] = function(test) {
     test.pass();
 };
 
-exports["batch cookie delete causes no problems"] = function(test) {
+exports["simulate cookies being cleared"] = function(test) {
+  let callbackCalled = false;
   monster.watch("mozilla", "test-cookie", function(value) {
+    callbackCalled = true;
   });
-  // XXX Figure this out, using the obersverService perhaps?
+
+  monster.simulateCookieSvc(null, "cleared");
+
+  test.assertEqual(callbackCalled, true, "when clearing cookies, the session was cleared");
 };
 
-exports["clear cookies"] = function(test) {
+
+exports["simulate cookies being reloaded"] = function(test) {
+  let callbackCalled = false;
   monster.watch("mozilla", "test-cookie", function(value) {
+    callbackCalled = true;
   });
-  // XXX Figure this out, using the obersverService perhaps?
+
+  monster.simulateCookieSvc(null, "reload");
+
+  test.assertEqual(callbackCalled, true, "when clearing cookies, the session was cleared");
 };
 
+
+exports["simulate cookies batch-deleted"] = function(test) {
+  let callbackCalled = false, callback2Called = false;
+  monster.watch("mozilla", "test-cookie", function(value) {
+    callbackCalled = true;
+  });
+  monster.watch("mozilla", "test-cookie2", function(value) {
+    callback2Called = true;
+  });
+
+  monster.simulateCookieSvc([
+    {
+      QueryInterface: function() {
+        return {
+          name: "test-cookie",
+          host: "mozilla"
+        }
+      }
+    },
+
+    {
+      QueryInterface: function() {
+        return {
+          name: "test-cookie2",
+          host: "mozilla"
+        }
+      }
+
+    }
+  ], "batch-deleted");
+
+  test.assertEqual(callbackCalled && callback2Called, true, "both cookies cleared on batch-delete");
+};
+
+function createCookie(name,value,days) {
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime()+(days*24*60*60*1000));
+        var expires = "; expires="+date.toGMTString();
+    }
+    else var expires = "";
+    var cookie = name+"="+value+expires+"; path=/";
+    return cookie;
+}

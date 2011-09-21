@@ -8,13 +8,13 @@ const unload = require("unload");
  */
 const CookieMonster = function() {
     this.handlers = {};
-    obSvc.add("cookie-changed", onCookieChange, this);
+    obSvc.add("cookie-changed", onServiceNotification, this);
     unload.ensure(this, "teardown");
 };
 
 CookieMonster.prototype = {
     teardown: function() {
-        obSvc.remove("cookie-changed", onCookieChange, this);
+        obSvc.remove("cookie-changed", onServiceNotification, this);
         this.handlers = null;
     },
 
@@ -28,7 +28,7 @@ CookieMonster.prototype = {
      */
     watch: function(host, name, callback) {
         var handlers = this.getHandlers(host, name);
-        if(handlers) {
+        if (handlers) {
             handlers.push(callback);
         }
     },
@@ -43,9 +43,9 @@ CookieMonster.prototype = {
      */
     unwatch: function(host, name, callback) {
         var handlers = this.getHandlers(host, name);
-        if(handlers) {
+        if (handlers) {
             handlers.forEach(function(handler, index) {
-                if(handler === callback) {
+                if (handler === callback) {
                     handlers.splice(index, 1);
                 }
             });
@@ -65,6 +65,16 @@ CookieMonster.prototype = {
     },
 
     /**
+     * Simulate an action by the cookie service
+     * @method simulateCookieSvc
+     * @param {string} subject - 
+     * @param {object} data
+     */
+    simulateCookieSvc: function(subject, data) {
+      onServiceNotification.call(this, subject, data);
+    },
+
+    /**
      * Get the list of handlers for a particular host/name
      * @method getHandlers
      * @param {string} host - the hostname for the cookie.
@@ -72,7 +82,7 @@ CookieMonster.prototype = {
      * @returns {array} array of functions.  Empty array if no handlers.
      */
     getHandlers: function(host, name) {
-        if(!this.handlers) return;
+        if (!this.handlers) return;
         var handlers = this.handlers[name + host] = this.handlers[name + host] || [];
         return handlers;
     },
@@ -90,19 +100,39 @@ CookieMonster.prototype = {
 
 function callHandlers(host, name, value) {
     var handlers = this.getHandlers(host, name);
-    if(handlers) {
+    if (handlers) {
         handlers.forEach(function(handler) {
             handler(value);
         });
     }
 }
 
-function onCookieChange(subject, data) {
-    var cookieInfo = subject.QueryInterface(Ci.nsICookie2);
-    var name = cookieInfo.name;
-    var host = cookieInfo.host;
-    
-    callHandlers.call(this, host, name, cookieInfo.value);
+function onServiceNotification(subject, data) {
+    if (data === "batch-deleted") {
+      subject.forEach(cookieChange.bind(this));
+    }
+    else if (data === "cleared" || data === "reload") {
+      // cookies were cleared, call all handlers
+      for(let host in this.handlers) {
+        let handlersForHost = this.handlers[host];
+        handlersForHost.forEach(function(handler) {
+          handler(undefined);
+        });
+      }
+
+      this.clear();
+    }
+    else {
+      cookieChange.call(this, subject);
+    }
+
+    function cookieChange(cookie) {
+        let cookieInfo = cookie.QueryInterface(Ci.nsICookie2);
+        let name = cookieInfo.name;
+        let host = cookieInfo.host;
+        
+        callHandlers.call(this, host, name, cookieInfo.value);
+    }
 }
 
 exports.CookieMonster = CookieMonster;
