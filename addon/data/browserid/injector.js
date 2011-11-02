@@ -17,8 +17,11 @@
     nav.id = nav.id || {};
     nav.id.getVerifiedEmail = function(callback) {
         assertionCallback = callback;
+        var loc = window.location;
+
+        var origin = loc.protocol + "//" + loc.host;
         self.port.emit("getAssertion", {
-            host: unsafeWindow.location.host
+            host: origin
         });
     };
 
