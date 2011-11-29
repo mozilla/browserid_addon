@@ -5,7 +5,6 @@ const {Helpers} = require("helpers");
 const {WindowManager} = require("sessions/window_manager");
 const {TabManager} = require("sessions/tab_manager");
 const tabs = require("tabs");
-const {Permissions} = require("sessions/permissions");
 const timer = require("timer");
 
 /**
@@ -34,14 +33,11 @@ const timer = require("timer");
  * via the 'logout' event.
  */
 exports.MainSession = function() {
-  let pm = new Permissions();
   let windowManager = new WindowManager();
   windowManager.on("login", emitEvent.bind(null, "emitevent.login"));
   windowManager.on("logout", emitEvent.bind(null, "emitevent.logout"));
+
   let tabManager = new TabManager();
-
-  let currWorker;
-
   let pageMod = PageMod({
       include: ["*"],
       contentScriptWhen: "start",
@@ -62,14 +58,16 @@ exports.MainSession = function() {
            * and that we should either remove the session display or update its 
            * contents.
            *
-           * We have to keep track of which worker to respond to for a tab.  
-           * Since a page can have multiple iframes, some of those iframes 
-           * coming after the initial session information is set, we only 
-           * set the tab's worker to be the worker that we receive messages 
-           * from.  We do this whenever we get a response for any of the 
-           * messages below.
+           * Save off which worker we have to respond to for this 
+           * particular tab.  Because every page may have multiple workers,
+           * one for the main page content and one for each IFRAME, we have 
+           * to keep track of which one is the top level user content. 
+           * Unfortunately there is no easy way of knowing this 
+           * information until we get a response from the content script 
+           * which is forced to only respond if it is at the top level.
            */
           if (worker.tab) {
+              worker.tab.topLevelWorker = worker;
               worker.port.on("sessions.set", onSessionSet.bind(worker));
               worker.port.on("sessions.opentab", onSessionTabOpen.bind(worker));
               worker.port.on("sessions.tabready", onSessionTabReady.bind(worker));
@@ -82,7 +80,8 @@ exports.MainSession = function() {
    * The page has set its session data, update the tab's session model.
    */
   function onSessionSet(data) {
-      this.tab.worker = this;
+      // We now know for sure which worker to respond to for this tab.
+      this.tab.topLevelWorker = this;
       tabManager.sessionUpdate(this.tab, data);
   }
 
@@ -92,7 +91,8 @@ exports.MainSession = function() {
    * it may have to reset itself.
    */
   function onSessionTabOpen(data) {
-      this.tab.worker = this;
+      // We now know for sure which worker to respond to for this tab.
+      this.tab.topLevelWorker = this;
       tabManager.sessionReset(this.tab, data);
   };
 
@@ -105,21 +105,12 @@ exports.MainSession = function() {
       tabManager.tabReady(this.tab);
   };
 
+  // emit the login or logout event to the active tab.  This happens when the 
+  // user interacts with the notification box in the URL bar.
   function emitEvent(eventName) {
       let tab = tabs.activeTab;
-      if (tab) {
-          /**
-           * This is ghetto fantastic.  For BrowserID to work, it opens a popup 
-           * window.  The popup window is opened programatically, but is 
-           * normally blocked because there is no click within the page.  We 
-           * are giving temporary permissions to open a popup and then we reset 
-           * the permission to its original state.
-           */
-          pm.allow("popup");
-          tab.worker.port.emit(eventName);
-          timer.setTimeout(function() {
-              pm.reset("popup", tab);
-          }, 500);
+      if(tab) {
+          tab.topLevelWorker.port.emit(eventName);
       }
   };
 

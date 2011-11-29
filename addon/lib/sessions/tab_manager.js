@@ -10,12 +10,17 @@ const unload = require("unload");
 /** 
  * The TabManager keeps track of all tabs and all sessions for all tabs.
  * A single TabManager keeps track of all tabs that are opened across all 
- * windows. It creates a session for every tab and does the management of those 
+ * windows. It creates a Session model for every tab and does the management of those 
  * sessions. When a new tab becomes active, the TabManager informs that tab's 
  * window that it needs to display the newly active tab's sessions.
  */
 let TabManager = function() {
+    // Watch for any cookies.  A change to cookies, if the session is bound to 
+    // cookie information, invalidates the session.
     this._cookieManager = new CookieMonster();
+
+    // Keep track of all of the bindings.  A binding is when a session is 
+    // active as long as the value of a cookie remains constant.
     this.bindings = new Bindings({
       cookieManager: this._cookieManager
     });
@@ -83,6 +88,7 @@ TabManager.prototype = {
     }
 };
 
+// Create the Session model for a tab.
 function createTabSession(tab) {
     if(!tab.session) {
         /**
@@ -118,6 +124,5 @@ function setActiveTab(tab) {
      * on the tab's session model.
      */
     tab.window.session = tab.session;
-    tab.window.activeTab = tab;
 }
 exports.TabManager = TabManager;

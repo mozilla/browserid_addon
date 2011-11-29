@@ -18,6 +18,8 @@ exports.setup = function() {
         getDocumentCalled = true;
         return getDocument.apply(null, arguments);
     };
+    let stylesheet = self.data.url('styles/identity-sessions.css');
+    Helpers.chrome.removeStylesheet(stylesheet);
 };
 
 exports.teardown = function() {
@@ -109,7 +111,15 @@ exports['loadStylesheet'] = function(test) {
     let pi = Helpers.chrome.loadStylesheet(self.data.url('styles/identity-sessions.css'));
 
     test.assertEqual(!!pi, true, 'we have some pi without failure');
-}
+};
+
+exports['loadStylesheet a second time'] = function(test) {
+    var stylesheet = self.data.url('styles/identity-sessions.css');
+    Helpers.chrome.loadStylesheet(stylesheet);
+    var pi = Helpers.chrome.loadStylesheet(stylesheet);
+
+    test.assertEqual(!!pi, false, 'stylesheets not added a second time');
+};
 
 exports['loadStylesheet with document'] = function(test) {
     let doc = Helpers.chrome.getDocument();
@@ -118,5 +128,26 @@ exports['loadStylesheet with document'] = function(test) {
 
     test.assertEqual(!!pi, true, 'we have some pi without failure');
     test.assertEqual(false, getDocumentCalled, 'getDocument was not called when passed a document');
-}
+};
+
+
+exports['stylesheetExists'] = function(test) {
+    var stylesheet = self.data.url('styles/identity-sessions.css');
+    Helpers.chrome.loadStylesheet(stylesheet);
+
+    var exists = Helpers.chrome.stylesheetExists(stylesheet);
+
+    test.assertEqual(exists, true, 'known stylesheet has been added');
+};
+
+exports['removeStylesheet'] = function(test) {
+    var stylesheet = self.data.url('styles/identity-sessions.css');
+    Helpers.chrome.loadStylesheet(stylesheet);
+
+    Helpers.chrome.removeStylesheet(stylesheet);
+
+    var exists = Helpers.chrome.stylesheetExists(stylesheet);
+
+    test.assertEqual(exists, false, 'removed stylesheet has been removed');
+};
 

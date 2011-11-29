@@ -45,13 +45,50 @@ const Helpers = {
 
         loadStylesheet: function(uri, doc) {
             doc = doc || Helpers.chrome.getDocument();
-            let pi = doc.createProcessingInstruction(
-                   "xml-stylesheet", "href=\"" + uri + "\" type=\"text/css\"");
-
-            doc.insertBefore(pi, doc.firstChild);
+            let pi;
+            if (!Helpers.chrome.stylesheetExists(uri, doc)) {
+              pi = doc.createProcessingInstruction(
+                     "xml-stylesheet", getXMLStylesheetInstruction(uri)); 
+              doc.insertBefore(pi, doc.firstChild);
+            }
             return pi;
+        },
+
+        removeStylesheet: function(uri, doc) {
+            doc = doc || Helpers.chrome.getDocument();
+            let sheet = getStylesheet(uri, doc);
+
+            if (sheet) {
+              sheet.parentNode.removeChild(sheet);
+            }
+        },
+
+        stylesheetExists: function(uri, doc) {
+            doc = doc || Helpers.chrome.getDocument();
+            let sheet = getStylesheet(uri, doc);
+
+            return !!sheet;
         }
+
+
     }
 };
+
+function getXMLStylesheetInstruction(uri) {
+  return "href=\"" + uri + "\" type=\"text/css\"";
+}
+
+function getStylesheet(uri, doc) {
+  let children = doc.childNodes;
+
+  for(let len = children.length - 1; len >= 0; --len) {
+    let sheet = children[len];
+    let data = sheet.data;
+    if (sheet.nodeName == "xml-stylesheet" && 
+        data == getXMLStylesheetInstruction(uri)) {
+      return sheet; 
+    }
+  };
+}
 
 exports.Helpers = Helpers;

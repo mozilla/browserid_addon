@@ -3,7 +3,7 @@
     "license": "MPL 1.1/GPL 2.0/LGPL 2.1",
     "author": "Mozilla Labs",
     "version": "0.1.7",
-    "fullName": "Browser Sign In",
+    "fullName": "BrowserID Sign In",
     "id": "browserid_addon@mozillalabs.com",
-    "description": "Sign in to sites using the browser!"
+    "description": "Sign in to sites using BrowserID!"
 }

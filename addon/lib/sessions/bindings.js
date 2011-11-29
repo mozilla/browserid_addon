@@ -15,6 +15,9 @@
 const {EventEmitter} = require("events");
 const unload = require("unload");
 
+// Keeps track of session bindings for a tab.  Bindings are session info that 
+// is related to a cookie.  When the cookie value changes or is cleared, the 
+// session is no longer valid.
 let Bindings = EventEmitter.compose({
   _bindings: undefined,
   _cookieManager: undefined,
@@ -32,11 +35,14 @@ let Bindings = EventEmitter.compose({
     this._bindings = null;
   },
 
+  // Add a binding for a host.  Both the host and the cookie name must be 
+  // specified.
   add: function(binding) {
     let host = binding.host;
     this.remove(host);
     let name = binding.bound_to.name;
-    // Save this off so that we can remove it later.
+
+    // Save off a remove function so the binding can be easily removed later.
     binding.remove = this.remove.bind(this, host);
 
     this._cookieManager.watch(host, name, binding.remove);
@@ -44,11 +50,13 @@ let Bindings = EventEmitter.compose({
     this.length++;
   },
 
+  // See if there is a binding for a particular host.
   get: function(host) {
     let binding = this._bindings[host];
     return binding;
   },
 
+  // Remove a binding for a host
   remove: function(host) {
     let binding = this.get(host);
     
