@@ -3,4 +3,3 @@ const {MainBrowserID} = require("browserid/main_module");
 
 MainSession();
 MainBrowserID();
-
