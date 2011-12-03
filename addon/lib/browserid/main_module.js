@@ -1,31 +1,25 @@
 const {data} = require("self");
-const {WindowListener} = require("browserid/window_listener");
+//const {WindowListener} = require("browserid/window_listener");
 const {Panel} = require("panel");
 const {PageMod} = require("page-mod");
 const {Helpers} = require("helpers");
 const tabs = require("tabs");
 
 exports.MainBrowserID = function() {
-  createWindowListener();
-  
-  function createWindowListener() {
-    let windowListener = new WindowListener();
-    windowListener.on("windowopen", onNewWindow);
-    windowListener.init();
-    return windowListener;
-  }
-  
-  function onNewWindow(window) {
-    var pageMod = PageMod({
-      include: "*",
+  function createPanel() {
+    let panel = Panel({
+      contentURL: "https://browserid.org/sign_in",
+      contentScriptFile: [
+        data.url("browserid/channel.js")
+      ],
       contentScriptWhen: "start",
-      contentScriptFile: data.url("browserid/injector.js"),
-      onAttach: function(worker) {
-        worker.port.on("getAssertion", function(payload) {
-          createShowPanel(payload.host, worker);
-        });
-      }
+      allow: { script: true },
+      width: 700,
+      height: 375
     });
+    
+    
+    return panel;
   }
 
   function createShowPanel(host, worker) {
@@ -61,21 +55,5 @@ exports.MainBrowserID = function() {
     return panel;
   }
   
-  
-  function createPanel() {
-    let panel = Panel({
-      contentURL: "https://browserid.org/sign_in",
-      contentScriptFile: [
-        data.url("browserid/channel.js")
-      ],
-      contentScriptWhen: "start",
-      allow: { script: true },
-      width: 700,
-      height: 375
-    });
-    
-    
-    return panel;
-  }
 };
 

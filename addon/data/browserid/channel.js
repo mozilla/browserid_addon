@@ -8,30 +8,30 @@ let browseridController;
 let complete;
 
 nav.id.channel.registerController = function(controller) {
-    browseridController = controller;    
-    self.port.emit("controllerReady");
+  browseridController = controller;    
+  self.port.emit("controllerReady");
 };
 
 self.port.on("getVerifiedEmail", function(payload) {
-    browseridController.getVerifiedEmail.call(browseridController,
-        payload.host, 
-        onGetAssertionSuccess,
-        onGetAssertionFailure
-    );
+  browseridController.getVerifiedEmail(
+    payload.host, 
+    onGetAssertionSuccess,
+    onGetAssertionFailure
+  );
 });
 
 function onGetAssertionSuccess(assertion) {
-    if (assertion) {
-        emit("assertionReady", {
-            assertion: assertion
-        });
-    }
+  if (assertion) {
+    emit("assertionReady", {
+      assertion: assertion
+    });
+  }
 }
 
 function onGetAssertionFailure(reason) {
-    emit("assertionFailure", {
-        reason: reason
-    });
+  emit("assertionFailure", {
+    reason: reason
+  });
 }
 
 function emit(message, payload) {
