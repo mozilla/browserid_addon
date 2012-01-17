@@ -108,6 +108,10 @@ function initChrome(window) {
 
 // Open a channel to handle requests
 function openChannel(browser, location, callback) {
+  // Clean up any pending channel from before
+  if (browser.browserIdCleanUp != null)
+    browser.browserIdCleanUp();
+
   let document = browser.ownerDocument;
   let window = document.defaultView;
 
