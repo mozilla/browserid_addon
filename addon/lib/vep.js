@@ -91,6 +91,15 @@ function initChrome(window) {
   }
   gBrowser.tabContainer.addEventListener("TabSelect", onSelect, false);
 
+  // Clean up any open channels if a tab navigates away
+  let progressListener = {
+    onLocationChange: function(browser, progress, request, location, flag) {
+      if (browser.browserIdCleanUp != null)
+        browser.browserIdCleanUp();
+    }
+  };
+  gBrowser.addTabsProgressListener(progressListener);
+
   // Provide an object to handle top-level chrome changes
   window.browserId = {
     updateSignIn: function() {
@@ -102,6 +111,7 @@ function initChrome(window) {
   unload.when(function() {
     idImage.parentNode.removeChild(idImage);
     gBrowser.tabContainer.removeEventListener("TabSelect", onSelect, false);
+    gBrowser.removeTabsProgressListener(progressListener);
     window.browserId = null;
   });
 }
