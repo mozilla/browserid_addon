@@ -164,11 +164,15 @@ function openChannel(browser, location, callback) {
     event.stopPropagation();
   }, true);
 
-  // Detect when to inject custom api to the document
-  observer.add("document-element-inserted", function onInsert(doc) {
+  // Detect when to inject custom controller API to the document
+  function injectController(doc) {
+    // Only inject into the local channel's top-most document
     if (doc != channel.contentDocument)
       return;
-    observer.remove("document-element-inserted", onInsert);
+
+    // Only inject into the expected url (prefix) allowing for redirects
+    if ((doc.location + "").indexOf(BROWSER_ID_URL) != 0)
+      return;
 
     // Initialize the raw content object
     let nav = channel.contentWindow.wrappedJSObject.navigator;
@@ -183,7 +187,8 @@ function openChannel(browser, location, callback) {
         callback();
       });
     };
-  });
+  }
+  observer.add("document-element-inserted", injectController);
 
   // Clean up any channel display from the content area
   browser.browserIdCleanUp = function() {
@@ -192,6 +197,7 @@ function openChannel(browser, location, callback) {
     // Trigger the callback if it's still waiting
     callback();
 
+    observer.remove("document-element-inserted", injectController);
     promptBox.parentNode.removeChild(promptBox);
     browser.browserIdActive = false;
     window.browserId.updateSignIn();
